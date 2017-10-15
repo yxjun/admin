@@ -1,0 +1,144 @@
+<#include "/WEB-INF/views/common/common.html"/>
+<@layout>
+<!-- 此处定义 页面单独的样式和 js -->
+</head>
+<body>
+	<script type="text/javascript">
+		var url;
+		function newSysMenu() {
+			$('#dlg').dialog('open').dialog('center')
+					.dialog('setTitle', '新建菜单');
+			$('#fm').form('clear');
+			var row = $('#dg').datagrid('getSelected');
+
+			if (row) {
+				$("#pid").val(row.id);
+				$("#pidName").textbox("setValue", row.name);
+			}
+
+			url = '${ctx!}/sysMenu/add';
+		}
+		function editSysMenu() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$('#dlg').dialog('open').dialog('center').dialog('setTitle',
+						'编辑菜单');
+				$('#fm').form('clear');
+				$('#fm').form('load', row);
+				$("#pidName").textbox("setValue", row.name);
+				url = '${ctx!}/sysMenu/update?id=' + row.id;
+			} else {
+				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');
+			}
+		}
+		function saveSysMenu() {
+			$('#fm').form('submit', {
+				url : url,
+				onSubmit : function() {
+					return $(this).form('validate');
+				},
+				success : function(result) {
+
+					if (result.indexOf("成功") >= 0) {
+						successMsgPretty(null,result);
+
+						$('#dlg').dialog('close'); // close the dialog
+						$('#dg').treegrid('reload'); // reload the user data
+					} else {
+						errMsgPretty(null,result);
+					}
+				}
+			});
+		}
+		function deleteSysMenu() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$.messager.confirm('删除确认', '你确定要删除这条记录吗?', function(r) {
+					if (r) {
+						$.post('${ctx!}/sysMenu/delete', {
+							id : row.id
+						}, function(result) {
+							if (result.indexOf("成功") >= 0) {
+								successMsgPretty(null,result);
+								$('#dg').treegrid('reload'); // reload the user data
+							} else {
+								errMsgPretty(null,result);
+							}
+
+						}, 'text');
+					}
+				});
+			}
+		}
+	</script>
+
+	<table id="dg" class="easyui-treegrid" url="${ctx!}/sysMenu/query"
+		toolbar="#tb" rownumbers="true" border="false" fit="true"
+		singleSelect="true"
+		 idField='id' ,
+        treeField='name'
+         data-options="onDblClickRow:treegridCancelSelect"
+        >
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<!-- 	<th field="id" width="50">菜单Id</th> -->
+				<th field="name" width="150">菜单名</th>
+				<th field="url" width="150">菜单地址</th>
+				<th field="iconCls" width="150">图标</th>
+				<th field="sort" width="50">排序</th>
+
+			</tr>
+		</thead>
+	</table>
+
+	<div id="dlg" class="easyui-dialog" style="width: 400px" closed="true"
+		buttons="#dlg-buttons">
+		<form id="fm" method="post" novalidate
+			style="margin: 0; padding: 20px 50px">
+			<input type="hidden" name="id" />
+			
+			<div style="margin-bottom: 10px">
+				<input type="hidden" id="pid" name="pid" /> <input name="pidName"
+					id="pidName" class="easyui-textbox" label="父菜单:"
+					disabled="disabled" style="width: 100%">
+			</div>
+
+			<div style="margin-bottom: 10px">
+				<input name="name" class="easyui-textbox" required="true"
+					label="菜单名:" style="width: 100%">
+			</div>
+			<div style="margin-bottom: 10px">
+				<input name="url" class="easyui-textbox" label="菜单地址:"
+					style="width: 100%">
+			</div>
+			<div style="margin-bottom: 10px">
+				<input name="icon" class="easyui-textbox" label="图标:"
+					style="width: 100%">
+			</div>
+			<div style="margin-bottom: 10px">
+				<input name="sort" class="easyui-numberbox" label="排序:"
+					style="width: 100%">
+			</div>
+		</form>
+	</div>
+
+	<div id="dlg-buttons">
+		<a href="javascript:void(0)" class="easyui-linkbutton c6"
+			iconCls="icon-ok" onclick="saveSysMenu()" style="width: 90px">保存</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+			style="width: 90px">取消</a>
+	</div>
+
+	<div id="tb">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+			onclick="newSysMenu()">新增</a>
+	   <a href="#" class="easyui-linkbutton"
+			iconCls="icon-edit" plain="true" onclick="editSysMenu()">编辑</a>
+	    <a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
+			plain="true" onclick="deleteSysMenu()">删除</a>  
+			
+	</div>
+	 
+	</@layout>

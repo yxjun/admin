@@ -1,0 +1,46 @@
+<#macro layout>  
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="edge" />
+<link rel="shortcut icon" href="example/favicon.ico" />
+<title>你好！${session.system_user.name}</title>
+<link href="${ctx!}/res/insdep/themes/insdep/easyui.css" rel="stylesheet" type="text/css">
+<link href="${ctx!}/res/insdep/themes/insdep/easyui_animation.css" rel="stylesheet" type="text/css">
+<link href="${ctx!}/res/insdep/themes/insdep/easyui_plus.css" rel="stylesheet" type="text/css">
+<link href="${ctx!}/res/insdep/themes/insdep/insdep_theme_default.css" rel="stylesheet" type="text/css">
+<link href="${ctx!}/res/insdep/themes/insdep/icon.css" rel="stylesheet" type="text/css">
+<link href="${ctx!}/res/insdep/plugin/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${ctx!}/res/insdep/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx!}/res/insdep/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${ctx!}/res/insdep/themes/insdep/jquery.insdep-extend.min.js"></script>
+
+<!-- 提示框工具 -->
+<link rel="stylesheet" href="${ctx!}/res/jquery-toast/dist/jquery.toast.min.css" />
+<script type="text/javascript" src="${ctx!}/res/jquery-toast/dist/jquery.toast.min.js"></script>
+
+<!-- 页面 渲染未完成 加载  效果 -->
+<script src="${ctx!}/res/insdep/themes/insdep/base-loading.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- 公共函数-->
+<script src="${ctx!}/res/js/common.js" type="text/javascript" charset="utf-8"></script>
+
+<style type="text/css">
+    .layout-panel-west{ border-right: 1px solid #c5c5c5; }
+    
+</style>
+<script>
+    $(function(){
+        $('#master-layout').layout({
+                fit:true/*布局框架全屏*/
+        }); 
+
+       
+    });
+</script>
+ 
+        <#nested>
+</body>
+</html>
+</#macro>
