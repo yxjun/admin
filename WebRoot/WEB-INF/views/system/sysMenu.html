@@ -6,7 +6,8 @@
 	<script type="text/javascript">
 		var url;
 		function newSysMenu() {
-			$('#dlg').dialog('open').dialog('center')
+			/* .dialog('center')  横向纵向正中央*/
+			$('#dlg').dialog('open') 
 					.dialog('setTitle', '新建菜单');
 			$('#fm').form('clear');
 			var row = $('#dg').datagrid('getSelected');
@@ -21,7 +22,8 @@
 		function editSysMenu() {
 			var row = $('#dg').datagrid('getSelected');
 			if (row) {
-				$('#dlg').dialog('open').dialog('center').dialog('setTitle',
+				/* .dialog('center')  横向纵向正中央*/
+				$('#dlg').dialog('open').dialog('setTitle',
 						'编辑菜单');
 				$('#fm').form('clear');
 				$('#fm').form('load', row);
@@ -92,7 +94,7 @@
 		</thead>
 	</table>
 
-	<div id="dlg" class="easyui-dialog" style="width: 400px" closed="true"
+	<div id="dlg" class="easyui-dialog" style="width: 400px; top:30px " closed="true"   
 		buttons="#dlg-buttons">
 		<form id="fm" method="post" novalidate
 			style="margin: 0; padding: 20px 50px">

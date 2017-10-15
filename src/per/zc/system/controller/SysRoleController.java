@@ -69,6 +69,9 @@ public class SysRoleController extends BaseController {
 		deleteSql = "delete from sys_role_menu where role_id = ?";
 		Db.update(deleteSql,id);
 		
+		deleteSql = "delete from sys_user_role where role_id = ?";
+		Db.update(deleteSql,id);
+		
 		renderText(Constant.DELETE_SUCCESS);
 
 	}

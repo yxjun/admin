@@ -20,6 +20,7 @@ import per.zc.system.model.SysMenu;
 import per.zc.system.model.SysOrg;
 import per.zc.system.model.SysRole;
 import per.zc.system.model.SysUser;
+import per.zc.system.model.SysUserRole;
 import per.zc.util.BaseController;
 import per.zc.util.TreeBuild;
 import per.zc.util.TreeNode;
@@ -101,9 +102,16 @@ public class LoginController  extends BaseController {
 	   setSessionAttr(Constant.SYSTEM_USER, sysUser);
 	   
 	   // 查询角色
-	   String roleSql = "select GROUP_CONCAT(' ',role_name,' ') as roleNames from sys_role where  id  in  ( "+sysUser.getRoleId()+" )";
-	   SysRole sysRole = SysRole.dao.findFirst(roleSql );
-	   setSessionAttr(Constant.SYSTEM_USER_ROLES, sysRole.get("roleNames"));
+	   String  roleSql = "SELECT"
+	   		+ " GROUP_CONCAT(sur.role_id) AS roleIds,"
+	   		+ " GROUP_CONCAT(sr.role_name) AS roleNames"
+	   		+ " FROM sys_user_role sur"
+	   		+ " LEFT JOIN sys_role sr ON sur.role_id = sr.id"
+	   		+ " WHERE user_id = ? "
+	   		+ " GROUP BY sur.user_id";
+	   SysUserRole sysUserRole = SysUserRole.dao.findFirst(roleSql,sysUser.getId());
+	   // 角色名称
+	   setSessionAttr(Constant.SYSTEM_USER_ROLES, sysUserRole.get("roleNames"));
 	  
 	    
 	 
@@ -115,7 +123,7 @@ public class LoginController  extends BaseController {
 		   		+ " order by 'sm.sort'";
 		   
 		  
-	   List<SysMenu> ownSysMenus =SysMenu.dao.find(ownMenuSql,sysUser.getRoleId());  // 拥有的权限菜单
+	   List<SysMenu> ownSysMenus =SysMenu.dao.find(ownMenuSql,sysUserRole.get("roleIds"));  // 拥有的权限菜单
 	   LOG.info("权限集合："+JSON.toJSONString(ownSysMenus));
 	   setSessionAttr(Constant.OWN_MENU, ownSysMenus);
 	 

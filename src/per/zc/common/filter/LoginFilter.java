@@ -44,6 +44,7 @@ public class LoginFilter implements Filter{
 		
 		//上下文路径
 		String contextPath = request.getContextPath();
+		req.setAttribute("ctx", contextPath);
 		 
 		// 不拦截 掉登陆 页面和静态资源
 		if(!curUrl.endsWith("login/index") 

@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50719
 Source Host           : localhost:3306
-Source Database       : admin2
+Source Database       : admin
 
 Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2017-10-15 08:58:36
+Date: 2017-10-15 20:23:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -87,13 +87,13 @@ CREATE TABLE `sys_role` (
   `create_time` datetime DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES ('3', '管理员', '分配所有权限222', '2017-10-07 21:22:34', '0');
-INSERT INTO `sys_role` VALUES ('8', '程序员', '测试角色', '2017-10-14 20:56:24', '1');
+INSERT INTO `sys_role` VALUES ('10', 'Test', 'test', null, '1');
 
 -- ----------------------------
 -- Table structure for `sys_role_menu`
@@ -122,7 +122,6 @@ CREATE TABLE `sys_user` (
   `password` varchar(120) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `org_id` int(11) DEFAULT NULL COMMENT '部门id',
-  `role_id` varchar(255) DEFAULT NULL COMMENT '角色id',
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(12) DEFAULT NULL,
   `disabled` varchar(2) DEFAULT '0' COMMENT '是否禁用0 未禁用 1禁用',
@@ -134,4 +133,19 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('916654989969981440', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', '张闯', '3', '3,8', '916432779@qq.com', '15238002477', '0', '2017-10-07 21:22:34');
+INSERT INTO `sys_user` VALUES ('916654989969981440', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', '张闯', '3', '916432779@qq.com', '15238002477', '0', '2017-10-07 21:22:34');
+
+-- ----------------------------
+-- Table structure for `sys_user_role`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_role`;
+CREATE TABLE `sys_user_role` (
+  `user_id` varchar(32) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_user_role
+-- ----------------------------
+INSERT INTO `sys_user_role` VALUES ('916654989969981440', '3');

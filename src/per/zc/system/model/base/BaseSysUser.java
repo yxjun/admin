@@ -49,14 +49,6 @@ public abstract class BaseSysUser<M extends BaseSysUser<M>> extends Model<M> imp
 		return get("org_id");
 	}
 
-	public void setRoleId(java.lang.String roleId) {
-		set("role_id", roleId);
-	}
-
-	public java.lang.String getRoleId() {
-		return get("role_id");
-	}
-
 	public void setEmail(java.lang.String email) {
 		set("email", email);
 	}
