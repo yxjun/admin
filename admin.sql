@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2017-10-15 20:23:51
+Date: 2017-10-16 17:41:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `sys_menu` (
   `sort` int(11) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -67,14 +67,21 @@ CREATE TABLE `sys_org` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `org_name` varchar(50) DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
-  `pid` varchar(32) DEFAULT NULL,
+  `pid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_org
 -- ----------------------------
-INSERT INTO `sys_org` VALUES ('3', 'zc科技有限公司', '0', null);
+INSERT INTO `sys_org` VALUES ('11', '金属公司', '0', null);
+INSERT INTO `sys_org` VALUES ('12', '物流公司', '1', null);
+INSERT INTO `sys_org` VALUES ('13', '房地产公司', '2', null);
+INSERT INTO `sys_org` VALUES ('14', '生产部', '0', '11');
+INSERT INTO `sys_org` VALUES ('15', '后勤部', '1', '11');
+INSERT INTO `sys_org` VALUES ('16', '货运部', '0', '12');
+INSERT INTO `sys_org` VALUES ('17', '销售部', '0', '13');
+INSERT INTO `sys_org` VALUES ('18', '营业部', '1', '12');
 
 -- ----------------------------
 -- Table structure for `sys_role`
@@ -93,7 +100,6 @@ CREATE TABLE `sys_role` (
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES ('3', '管理员', '分配所有权限222', '2017-10-07 21:22:34', '0');
-INSERT INTO `sys_role` VALUES ('10', 'Test', 'test', null, '1');
 
 -- ----------------------------
 -- Table structure for `sys_role_menu`
@@ -111,6 +117,7 @@ CREATE TABLE `sys_role_menu` (
 INSERT INTO `sys_role_menu` VALUES ('3', '5');
 INSERT INTO `sys_role_menu` VALUES ('3', '6');
 INSERT INTO `sys_role_menu` VALUES ('3', '23');
+INSERT INTO `sys_role_menu` VALUES ('3', '25');
 
 -- ----------------------------
 -- Table structure for `sys_user`
@@ -133,7 +140,7 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('916654989969981440', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', '张闯', '3', '916432779@qq.com', '15238002477', '0', '2017-10-07 21:22:34');
+INSERT INTO `sys_user` VALUES ('916654989969981440', 'admin', '7c4a8d09ca3762af61e59520943dc26494f8941b', '张闯', null, '916432779@qq.com', '15238002477', '0', '2017-10-07 21:22:34');
 
 -- ----------------------------
 -- Table structure for `sys_user_role`
@@ -149,3 +156,30 @@ CREATE TABLE `sys_user_role` (
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES ('916654989969981440', '3');
+
+-- ----------------------------
+-- Function structure for `getChildLst`
+-- ----------------------------
+DROP FUNCTION IF EXISTS `getChildLst`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `getChildLst`(rootId INT,tableName VARCHAR(255)) RETURNS varchar(1000) CHARSET utf8
+BEGIN
+   DECLARE sTemp VARCHAR(1000);
+   DECLARE sTempChd VARCHAR(1000);
+ 
+  SET sTemp = '$';
+   SET sTempChd =cast(rootId as CHAR);
+ 
+ 
+  WHILE sTempChd is not null DO
+    SET sTemp = concat(sTemp,',',sTempChd);
+    IF tableName = 'sys_org' THEN
+       SELECT group_concat(id) INTO sTempChd FROM sys_org where FIND_IN_SET(pid,sTempChd)>0;
+    ELSEIF tableName = 'sys_menu' THEN
+       SELECT group_concat(id) INTO sTempChd FROM sys_menu where FIND_IN_SET(pid,sTempChd)>0;
+    END IF;
+  END WHILE;
+  RETURN REPLACE(sTemp,'$,','');
+ END
+;;
+DELIMITER ;
