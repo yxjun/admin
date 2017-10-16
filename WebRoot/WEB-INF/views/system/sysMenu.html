@@ -10,7 +10,7 @@
 			$('#dlg').dialog('open') 
 					.dialog('setTitle', '新建菜单');
 			$('#fm').form('clear');
-			var row = $('#dg').datagrid('getSelected');
+			var row = $('#dg').treegrid('getSelected');
 
 			if (row) {
 				$("#pid").val(row.id);
@@ -20,14 +20,14 @@
 			url = '${ctx!}/sysMenu/add';
 		}
 		function editSysMenu() {
-			var row = $('#dg').datagrid('getSelected');
+			var row = $('#dg').treegrid('getSelected');
 			if (row) {
 				/* .dialog('center')  横向纵向正中央*/
 				$('#dlg').dialog('open').dialog('setTitle',
 						'编辑菜单');
 				$('#fm').form('clear');
 				$('#fm').form('load', row);
-				$("#pidName").textbox("setValue", row.name);
+				$("#pidName").textbox("setValue",$("#dg").treegrid('getParent',row.id).name);
 				url = '${ctx!}/sysMenu/update?id=' + row.id;
 			} else {
 				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');

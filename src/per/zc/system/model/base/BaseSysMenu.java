@@ -1,6 +1,7 @@
 package per.zc.system.model.base;
 
 import com.jfinal.plugin.activerecord.Model;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.jfinal.plugin.activerecord.IBean;
 
 /**
@@ -13,6 +14,7 @@ public abstract class BaseSysMenu<M extends BaseSysMenu<M>> extends Model<M> imp
 		set("id", id);
 	}
 
+ 
 	public java.lang.Integer getId() {
 		return get("id");
 	}
@@ -21,14 +23,18 @@ public abstract class BaseSysMenu<M extends BaseSysMenu<M>> extends Model<M> imp
 		set("name", name);
 	}
 
+ 
 	public java.lang.String getName() {
 		return get("name");
 	}
 
+	
+	
 	public void setUrl(java.lang.String url) {
 		set("url", url);
 	}
 
+	@JSONField(ordinal=3)
 	public java.lang.String getUrl() {
 		return get("url");
 	}

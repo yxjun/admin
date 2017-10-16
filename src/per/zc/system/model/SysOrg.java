@@ -1,5 +1,7 @@
 package per.zc.system.model;
 
+import java.util.List;
+
 import per.zc.system.model.base.BaseSysOrg;
 
 /**
@@ -9,4 +11,9 @@ import per.zc.system.model.base.BaseSysOrg;
 @SuppressWarnings("serial")
 public class SysOrg extends BaseSysOrg<SysOrg> {
 	public static final SysOrg dao = new SysOrg().dao();
+	
+
+	public  List<SysOrg> getChildren(){
+		return get("children");
+	}
 }

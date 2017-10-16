@@ -32,7 +32,7 @@ public class SysMenuController  extends BaseController {
 	
 	public void query() {
 		List<SysMenu> sysMenus = SysMenu.dao.findAll();
-		List<Map<String, Object>> treeNodes =  TreeBuild.easyuiTreeBuild2(sysMenus, sysMenus);
+		List<Map<String, Object>> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus, sysMenus);
 		renderJson(treeNodes);
 	}
 	
@@ -54,6 +54,8 @@ public class SysMenuController  extends BaseController {
 	public  void delete(){
 		Integer sysMenuId =getParaToInt("id");
 	 
+		
+		//TODO 级联删除
 		String deleteSql = "delete from sys_menu where pid = ? or id = ?";
 		Db.update(deleteSql,sysMenuId,sysMenuId);
 		

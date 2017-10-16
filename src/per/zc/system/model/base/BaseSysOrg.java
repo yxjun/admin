@@ -1,6 +1,9 @@
 package per.zc.system.model.base;
 
 import com.jfinal.plugin.activerecord.Model;
+
+import java.util.List;
+
 import com.jfinal.plugin.activerecord.IBean;
 
 /**
@@ -33,12 +36,14 @@ public abstract class BaseSysOrg<M extends BaseSysOrg<M>> extends Model<M> imple
 		return get("sort");
 	}
 
-	public void setPid(java.lang.String pid) {
+	public void setPid(java.lang.Integer pid) {
 		set("pid", pid);
 	}
 
-	public java.lang.String getPid() {
+	public java.lang.Integer getPid() {
 		return get("pid");
 	}
+	
+	 
 
 }

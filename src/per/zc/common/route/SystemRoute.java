@@ -5,6 +5,7 @@ import com.jfinal.config.Routes;
 import per.zc.common.constant.Constant;
 import per.zc.system.controller.LoginController;
 import per.zc.system.controller.SysMenuController;
+import per.zc.system.controller.SysOrgController;
 import per.zc.system.controller.SysRoleController;
 import per.zc.system.controller.SysUserController;
  
@@ -25,6 +26,8 @@ public class SystemRoute extends Routes {
 		
 		//用户管理
 	    add("/sysUser", SysUserController.class,Constant.VIEW_PATH);
+	    
+	    add("/sysOrg",SysOrgController.class,Constant.VIEW_PATH);
 	 
 	}
 

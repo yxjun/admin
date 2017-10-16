@@ -1,0 +1,135 @@
+<#include "/WEB-INF/views/common/common.html"/>
+<@layout>
+<!-- 此处定义 页面单独的样式和 js -->
+</head>
+<body>
+	<script type="text/javascript">
+		var url;
+		function newSysOrg() {
+			/* .dialog('center')  横向纵向正中央*/
+			$('#dlg').dialog('open') 
+					.dialog('setTitle', '新建组织');
+			$('#fm').form('clear');
+			var row = $('#dg').treegrid('getSelected');
+
+			if (row) {
+				$("#pid").val(row.id);
+				$("#pidName").textbox("setValue", row.orgName);
+			}
+
+			url = '${ctx!}/sysOrg/add';
+		}
+		function editSysOrg() {
+			var row = $('#dg').treegrid('getSelected');
+			if (row) {
+				/* .dialog('center')  横向纵向正中央*/
+				$('#dlg').dialog('open').dialog('setTitle',
+						'编辑组织');
+				$('#fm').form('clear');
+				$('#fm').form('load', row);
+				$("#pidName").textbox("setValue", $("#dg").treegrid('getParent',row.id).orgName);  // 只是显示一下
+				url = '${ctx!}/sysOrg/update?id=' + row.id;
+			} else {
+				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');
+			}
+		}
+		function saveSysOrg() {
+			$('#fm').form('submit', {
+				url : url,
+				onSubmit : function() {
+					return $(this).form('validate');
+				},
+				success : function(result) {
+
+					if (result.indexOf("成功") >= 0) {
+						successMsgPretty(null,result);
+
+						$('#dlg').dialog('close'); // close the dialog
+						$('#dg').treegrid('reload'); // reload the user data
+					} else {
+						errMsgPretty(null,result);
+					}
+				}
+			});
+		}
+		function deleteSysOrg() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$.messager.confirm('删除确认', '你确定要删除这条记录吗?', function(r) {
+					if (r) {
+						$.post('${ctx!}/sysOrg/delete', {
+							id : row.id
+						}, function(result) {
+							if (result.indexOf("成功") >= 0) {
+								successMsgPretty(null,result);
+								$('#dg').treegrid('reload'); // reload the user data
+							} else {
+								errMsgPretty(null,result);
+							}
+
+						}, 'text');
+					}
+				});
+			}
+		}
+	</script>
+
+	<table id="dg" class="easyui-treegrid" url="${ctx!}/sysOrg/query"
+		toolbar="#tb" rownumbers="true" border="false" fit="true"
+		singleSelect="true"
+		 idField='id' ,
+         treeField='orgName'
+         data-options="onDblClickRow:treegridCancelSelect"
+        >
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th field="orgName" width="150">名称</th>
+				<th field="sort" width="50">排序</th>
+			</tr>
+		</thead>
+	</table>
+
+	<div id="dlg" class="easyui-dialog" style="width: 400px; top:30px " closed="true"   
+		buttons="#dlg-buttons">
+		<form id="fm" method="post" novalidate
+			style="margin: 0; padding: 20px 50px">
+			<input type="hidden" name="id" />
+			
+			<div style="margin-bottom: 10px">
+				<input type="hidden" id="pid" name="pid" /> <input name="pidName"
+					id="pidName" class="easyui-textbox" label="父级:"
+					disabled="disabled" style="width: 100%">
+			</div>
+
+			<div style="margin-bottom: 10px">
+				<input name="orgName" class="easyui-textbox" required="true"
+					label="组织名称:" style="width: 100%">
+			</div>
+		 
+			<div style="margin-bottom: 10px">
+				<input name="sort" class="easyui-numberbox" label="排序:"
+					style="width: 100%">
+			</div>
+		</form>
+	</div>
+
+	<div id="dlg-buttons">
+		<a href="javascript:void(0)" class="easyui-linkbutton c6"
+			iconCls="icon-ok" onclick="saveSysOrg()" style="width: 90px">保存</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+			style="width: 90px">取消</a>
+	</div>
+
+	<div id="tb">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+			onclick="newSysOrg()">新增</a>
+	   <a href="#" class="easyui-linkbutton"
+			iconCls="icon-edit" plain="true" onclick="editSysOrg()">编辑</a>
+	    <a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
+			plain="true" onclick="deleteSysOrg()">删除</a>  
+			
+	</div>
+	 
+	</@layout>
