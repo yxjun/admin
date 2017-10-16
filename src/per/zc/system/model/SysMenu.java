@@ -16,4 +16,8 @@ public class SysMenu extends BaseSysMenu<SysMenu> {
 		String sql = "select * from sys_menu order by  sort asc";
 		return find(sql);
 	}
+	
+	public  List<SysMenu> getChildren(){
+		return get("children");
+	}
 }

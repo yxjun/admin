@@ -7,6 +7,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import per.zc.common.constant.Constant;
@@ -32,7 +33,7 @@ public class SysMenuController  extends BaseController {
 	
 	public void query() {
 		List<SysMenu> sysMenus = SysMenu.dao.findAll();
-		List<Map<String, Object>> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus, sysMenus);
+		List<SysMenu> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus, sysMenus);
 		renderJson(treeNodes);
 	}
 	
@@ -52,17 +53,20 @@ public class SysMenuController  extends BaseController {
 	
 	@Before(Tx.class)
 	public  void delete(){
-		Integer sysMenuId =getParaToInt("id");
+		Integer id =getParaToInt("id");
+	 
+		Record record = Db.findFirst("select getChildLst(?,'sys_menu') as childrenIds ",id);
+		String childrenIds = record.getStr("childrenIds");  // 子、孙 id
 	 
 		
 		//TODO 级联删除
-		String deleteSql = "delete from sys_menu where pid = ? or id = ?";
-		Db.update(deleteSql,sysMenuId,sysMenuId);
+		String deleteSql = "delete from sys_menu where id in ("+childrenIds+")";
+		Db.update(deleteSql);
 		
 		
 		// 删除相应 的 角色权限关联
-		deleteSql ="delete from sys_role_menu where menu_id = ? ";
-		Db.update(deleteSql,sysMenuId);
+		deleteSql ="delete from sys_role_menu where menu_id in ("+childrenIds+") ";
+		Db.update(deleteSql);
 		
 		renderText(Constant.DELETE_SUCCESS);
 		 

@@ -1,135 +1,158 @@
-<#include "/WEB-INF/views/common/common.html"/> 
-<@layout>
+<#include "/WEB-INF/views/common/common.html"/> <@layout>
 <!-- 此处定义 页面单独的样式和 js -->
 </head>
 <body>
-<script type="text/javascript">
-
-	var url;
-	function newSysRole() {
-		/* .dialog('center')  横向纵向正中央*/
-		$('#dlg').dialog('open') 
-				.dialog('setTitle', '新建角色');
-		$('#fm').form('clear');
-		url = '${ctx!}/sysRole/add';
-	}
-	function editSysRole() {
-		var row = $('#dg').datagrid('getSelected');
-		if (row) {
-			$('#dlg').dialog('open').dialog('setTitle',
-					'编辑角色');
+	<script type="text/javascript">
+		var url;
+		function newSysRole() {
+			/* .dialog('center')  横向纵向正中央*/
+			$('#dlg').dialog('open').dialog('setTitle', '新建角色');
 			$('#fm').form('clear');
-			$('#fm').form('load', row);
-			$("#pidName").textbox("setValue",row.name);
-			url = '${ctx!}/sysRole/update?id=' + row.id;
-		}else{
-			$.messager.alert('警告','修改之前请先选择一条记录!','warning');
+			url = '${ctx!}/sysRole/add';
 		}
-	}
-	function saveSysRole() {
-		$('#fm').form('submit', {
-			url : url,
-			onSubmit : function() {
-				return $(this).form('validate');
-			},
-			success : function(result) {
-			 
-				if(result.indexOf("成功")>=0){
-					successMsgPretty(null,result);
-					$('#dlg').dialog('close'); // close the dialog
-					$('#dg').datagrid('reload'); // reload the user data
-				}else{
-					errMsgPretty(null,result);
-				}
+		function editSysRole() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$('#dlg').dialog('open').dialog('setTitle', '编辑角色');
+				$('#fm').form('clear');
+				$('#fm').form('load', row);
+				$("#pidName").textbox("setValue", row.name);
+				url = '${ctx!}/sysRole/update?id=' + row.id;
+			} else {
+				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');
 			}
-		});
-	}
-	function deleteSysRole() {
-		var row = $('#dg').datagrid('getSelected');
-		if (row) {
-			$.messager.confirm('删除确认',
-					'你确定要删除这条记录吗?', function(r) {
-						if (r) {
-							$.post('${ctx!}/sysRole/delete', {
-								id : row.id
-							}, function(result) {
-								if(result.indexOf("成功")>=0){
-									successMsgPretty(null,result);
-									$('#dg').datagrid('reload'); // reload the user data
-								}else{
-									errMsgPretty(null,result);
-								}
-								 
-							}, 'text');
-						}
-					});
 		}
-	}
-</script>
+		function saveSysRole() {
+			$('#fm').form('submit', {
+				url : url,
+				onSubmit : function() {
+					return $(this).form('validate');
+				},
+				success : function(result) {
 
-<table id="dg" class="easyui-datagrid  " url="${ctx!}/sysRole/query"
-	toolbar="#tb" 
-	rownumbers="true" 
-	border="false" 
-	singleSelect="true"
-	fit="true" 
-	pagination="true"
-	 data-options="onDblClickRow:datagridCancelSelect"
-	>
-	<thead>
-		<tr>
-			<th data-options="field:'ck',checkbox:true"></th>
-			<th field="roleName" width="150">角色名</th>
-			<th field="roleDesc" width="150">角色描述</th>
-			<th field="createTime" width="150">创建时间</th>
-			<th field="sort" width="50">排序</th>
-			 
-		</tr>
-	</thead>
-</table>
+					if (result.indexOf("成功") >= 0) {
+						successMsgPretty(null, result);
+						$('#dlg').dialog('close'); // close the dialog
+						$('#dg').datagrid('reload'); // reload the user data
+					} else {
+						errMsgPretty(null, result);
+					}
+				}
+			});
+		}
+		function deleteSysRole() {
+			var row = $('#dg').datagrid('getSelected');
+			if (row) {
+				$.messager.confirm('删除确认', '你确定要删除这条记录吗?', function(r) {
+					if (r) {
+						$.post('${ctx!}/sysRole/delete', {
+							id : row.id
+						}, function(result) {
+							if (result.indexOf("成功") >= 0) {
+								successMsgPretty(null, result);
+								$('#dg').datagrid('reload'); // reload the user data
+							} else {
+								errMsgPretty(null, result);
+							}
 
-<div id="dlg" class="easyui-dialog" style="width: 400px; top:30px" closed="true"
-	buttons="#dlg-buttons">
-	<form id="fm" method="post" novalidate
-		style="margin: 0; padding: 20px 50px">
-	    <input type="hidden" name="id" />
-		<div style="margin-bottom: 10px">
-			<input name="roleName" class="easyui-textbox" required="true"
-				label="角色名:" style="width: 100%">
+						}, 'text');
+					}
+				});
+			}
+		}
+	</script>
+
+	<div id="nestLayout" class="easyui-layout" fit="true" >
+		<div data-options="region:'east' " title="权限树"   
+		split="true" border="false"  collapsed="true"   
+			style="width: 400px;">
+			   <table   class="easyui-treegrid"  
+			   border="false" fit="true"
+	            data-options="
+	                url: '${ctx!}/sysMenu/query',
+	                method: 'get',
+	                checkbox: true,
+	                rownumbers: true,
+	                idField: 'id',
+	                treeField: 'name'
+	            ">
+        <thead>
+            <tr>
+                <th field="name" width="150">菜单名</th>
+				<th field="url" width="150">菜单地址</th>
+            </tr>
+        </thead>
+    </table>
 		</div>
-		<div style="margin-bottom: 10px">
-			<input name="roleDesc" class="easyui-textbox"  
-				label="角色备注:" style="width: 100%">
+		<div data-options="region:'center' "  border="false"   split="true">
+
+			<table id="dg" class="easyui-datagrid  " url="${ctx!}/sysRole/query"
+				toolbar="#tb" rownumbers="true" border="false" singleSelect="true"
+				fit="true" pagination="true"
+				data-options="onDblClickRow:datagridCancelSelect">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th field="roleName" width="150">角色名</th>
+						<th field="roleDesc" width="150">角色描述</th>
+						<th field="createTime" width="150">创建时间</th>
+						<th field="sort" width="50">排序</th>
+
+					</tr>
+				</thead>
+			</table>
+
+			<div id="dlg" class="easyui-dialog" style="width: 400px; top: 30px"
+				closed="true" buttons="#dlg-buttons">
+				<form id="fm" method="post" novalidate
+					style="margin: 0; padding: 20px 50px">
+					<input type="hidden" name="id" />
+					<div style="margin-bottom: 10px">
+						<input name="roleName" class="easyui-textbox" required="true"
+							label="角色名:" style="width: 100%">
+					</div>
+					<div style="margin-bottom: 10px">
+						<input name="roleDesc" class="easyui-textbox" label="角色备注:"
+							style="width: 100%">
+					</div>
+					<div style="margin-bottom: 10px">
+						<input name="sort" class="easyui-numberbox" label="排序:"
+							style="width: 100%">
+					</div>
+				</form>
+			</div>
+
+			<div id="dlg-buttons">
+				<a href="javascript:void(0)" class="easyui-linkbutton c6"
+					iconCls="icon-ok" onclick="saveSysRole()" style="width: 90px">保存</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton"
+					iconCls="icon-cancel"
+					onclick="javascript:$('#dlg').dialog('close')" style="width: 90px">取消</a>
+			</div>
+
+			<div id="tb">
+				<a href="#" class="easyui-linkbutton" iconCls="icon-add"
+					plain="true" onclick="newSysRole()">新增</a> <a href="#"
+					class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+					onclick="editSysRole()">编辑</a> <a href="#"
+					class="easyui-linkbutton  " iconCls="icon-remove" plain="true"
+					onclick="deleteSysRole()">删除</a> <a href="#"
+					class="easyui-linkbutton  " iconCls="icon-user-config" plain="true"
+					onclick="">授权</a>
+			</div>
 		</div>
-		<div style="margin-bottom: 10px">
-			<input name="sort" class="easyui-numberbox" label="排序:"
-				style="width: 100%">
-		</div>
-	</form>
-</div>
+	</div>
 
-<div id="dlg-buttons">
-	<a href="javascript:void(0)" class="easyui-linkbutton c6"
-		iconCls="icon-ok" onclick="saveSysRole()" style="width: 90px">保存</a> <a
-		href="javascript:void(0)" class="easyui-linkbutton"
-		iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
-		style="width: 90px">取消</a>
-</div>
-
-<div id="tb">
-	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
-		onclick="newSysRole()">新增</a>
-    <a href="#" class="easyui-linkbutton"
-		iconCls="icon-edit" plain="true" onclick="editSysRole()">编辑</a>
-    <a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
-		plain="true" onclick="deleteSysRole()">删除</a>
-	 
-    <a href="#" class="easyui-linkbutton  " iconCls="icon-user-config"
-		plain="true" onclick="">授权</a>
-</div>
-<script>
- 
-</script>
-</@layout>
-
-
+	<script>
+		$('#nestLayout').layout({
+		    region: 'east',
+		    tools: [{
+		        iconCls:'icon-add',
+		        handler:function(){alert('add')}
+		    },{
+		        iconCls:'icon-remove',
+		        handler:function(){alert('remove')}
+		    }]
+		});
+	</script>
+	</@layout>

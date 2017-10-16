@@ -63,8 +63,7 @@ public class SysOrgController  extends BaseController{
 		
 		Record record = Db.findFirst("select getChildLst(?,'sys_org') as childrenIds ",id);
 		String childrenIds = record.getStr("childrenIds");  // 子、孙 id
-		System.out.println("childrenIds: "+childrenIds);
-		
+		 
 		
 		String deleteSql = "delete from sys_org where  id  in ("+childrenIds+")";
 		Db.update(deleteSql);
