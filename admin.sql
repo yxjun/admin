@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2017-10-16 17:41:28
+Date: 2017-10-17 17:39:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -94,12 +94,15 @@ CREATE TABLE `sys_role` (
   `create_time` datetime DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES ('3', '管理员', '分配所有权限222', '2017-10-07 21:22:34', '0');
+INSERT INTO `sys_role` VALUES ('11', 'Test', 'test', null, '1');
+INSERT INTO `sys_role` VALUES ('12', '员工', 'staff', null, '2');
+INSERT INTO `sys_role` VALUES ('13', '主管', '主管', null, '3');
 
 -- ----------------------------
 -- Table structure for `sys_role_menu`
@@ -114,7 +117,6 @@ CREATE TABLE `sys_role_menu` (
 -- ----------------------------
 -- Records of sys_role_menu
 -- ----------------------------
-INSERT INTO `sys_role_menu` VALUES ('3', '5');
 INSERT INTO `sys_role_menu` VALUES ('3', '6');
 INSERT INTO `sys_role_menu` VALUES ('3', '23');
 INSERT INTO `sys_role_menu` VALUES ('3', '25');
