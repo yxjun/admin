@@ -2,8 +2,10 @@ package per.zc.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.jfinal.kit.StrKit;
 
@@ -60,7 +62,7 @@ public class TreeBuild {
 		}
 
 		// 总数据 添加祖孙关系，并拿出 树根
-		List<Integer> root = new ArrayList<>();
+		List<Integer> pidset = new ArrayList<>();
 		for (TreeNode treeNode : sonTreeNodeList) {
 			Integer pid = treeNode.getPid();
 			if (pid != null) {
@@ -71,14 +73,17 @@ public class TreeBuild {
 					map.get(pid).setChildren(children);
 				}
 				children.add(treeNode);
-			} else {
-				root.add(treeNode.getId()); // 根（拥有的权限根）
-			}
+				if(!pidset.contains(pid)){
+					pidset.add(pid);
+				}
+				 
+			} 
 		}
 
 		// 拿出 有权限的树根
 		List<TreeNode> treeList = new ArrayList<>();
-		for (Integer recordId : root) {
+		
+		for (Integer recordId : pidset) {
 			TreeNode rootRecord = map.get(recordId);
 			treeList.add(rootRecord);
 		}

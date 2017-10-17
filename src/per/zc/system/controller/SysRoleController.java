@@ -1,5 +1,7 @@
 package per.zc.system.controller;
 
+import java.util.List;
+
 import com.jfinal.aop.Before;
 import com.jfinal.kit.StrKit;import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -7,6 +9,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 
 import per.zc.common.constant.Constant;
 import per.zc.system.model.SysRole;
+import per.zc.system.model.SysRoleMenu;
 import per.zc.util.BaseController;
 import per.zc.util.SearchSql;
 
@@ -74,6 +77,17 @@ public class SysRoleController extends BaseController {
 		
 		renderText(Constant.DELETE_SUCCESS);
 
+	}
+	
+	
+	/**
+	 * 通过角色id 查询  权限
+	 */
+	public void  getPermission(){
+		Integer id= getParaToInt(0);
+		List<SysRoleMenu> sysRoleMenus = SysRoleMenu.dao.find("select * from sys_role_menu where role_id = ? ", id);
+		renderJson(sysRoleMenus);
+		
 	}
 
 }
