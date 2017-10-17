@@ -21,7 +21,7 @@ public class SysOrgController  extends BaseController{
 	
 	public void query(){
 		List<SysOrg> sysOrgs = SysOrg.dao.find("select * from sys_org order by sort");
-		List<SysOrg> sysOrgTreeGrid = TreeBuild.easyuiOrgTreegridBuild(sysOrgs, sysOrgs);
+		List<SysOrg> sysOrgTreeGrid = TreeBuild.easyuiOrgTreegridBuild(sysOrgs);
 		renderJson(sysOrgTreeGrid);
 		
 	}

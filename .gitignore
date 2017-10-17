@@ -5,3 +5,6 @@
 jfinalide.properties
 /WebRoot/META-INF
 /WebRoot/WEB-INF/classes
+/.idea
+/out
+*.iml

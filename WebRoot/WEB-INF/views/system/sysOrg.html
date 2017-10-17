@@ -63,6 +63,7 @@
 							if (result.indexOf("成功") >= 0) {
 								successMsgPretty(null,result);
 								$('#dg').treegrid('reload'); // reload the user data
+                                $('#dg').datagrid('clearSelections');
 							} else {
 								errMsgPretty(null,result);
 							}

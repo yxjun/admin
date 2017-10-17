@@ -65,6 +65,59 @@
 				});
 			}
 		}
+
+
+        /**
+		 * 赋权， 不可断链
+         */
+		function givePermission(){
+            var permissionRowAry = $("#tg").treegrid("getCheckedNodes");
+            if(permissionRowAry.length==0){
+                $.messager.alert('警告', '请选择要分配的权限菜单!', 'warning');
+                return;
+			}
+
+			var roleRow = $("#dg").datagrid("getSelected");
+            if(roleRow==null){
+                $.messager.alert('警告', '请选择要分配权限的角色!', 'warning');
+                return;
+			}
+
+            var permissIds = [];
+            for(var i = 0;i<permissionRowAry.length;i++){
+                if($.trim(permissionRowAry[i].id)!=""
+					&& permissionRowAry[i].id!=undefined
+					&& permissionRowAry[i].id !=null){
+                    permissIds.push(permissionRowAry[i].id);
+				}
+
+                if($.trim(permissionRowAry[i].pid)!=""
+                    && permissionRowAry[i].pid!=undefined
+                    && permissionRowAry[i].pid !=null){
+                    permissIds.push(permissionRowAry[i].pid);
+                }
+
+			}
+
+			// 去重
+			permissIds = removeDuplicatedItem(permissIds);
+
+            console.table([{be:permissIds.toString(),af:permissIds.toString()}]);
+            $.post('${ctx!}/sysRole/givePermission', {
+                roleId : roleRow.id,
+				permissIds : permissIds.join(";")
+            }, function(result) {
+                if (result.indexOf("成功") >= 0) {
+                    successMsgPretty(null, result);
+                } else {
+                    errMsgPretty(null, result);
+                }
+
+            }, 'text');
+
+		}
+
+
 	</script>
 
 	<div id="nestLayout" class="easyui-layout" fit="true" >
@@ -147,7 +200,7 @@
 			<div id="tb2">
 				<a href="#"
 				class="easyui-linkbutton  " iconCls="icon-user-config" plain="true"
-				onclick="">授权</a>
+				onclick="givePermission()">授权</a>
 			</div>
 		</div>
 	</div>
@@ -166,7 +219,9 @@
 					var url = "${ctx!}/sysRole/getPermission/" + row.id;
 					$.getJSON(url, function(data) {
 						for (var i = 0; i < data.length; i++) {
-								$("#tg").treegrid("checkNode",data[i].menuId);
+						        if($("#tg").treegrid("getChildren",data[i].menuId).length == 0){
+                                    $("#tg").treegrid("checkNode",data[i].menuId);
+								}
 						}
 					});
 				}

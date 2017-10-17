@@ -123,7 +123,7 @@ public class LoginController  extends BaseController {
 		   		+ " order by 'sm.sort'";
 		   
 		  
-	   List<SysMenu> ownSysMenus =SysMenu.dao.find(ownMenuSql,sysUserRole.get("roleIds"));  // 拥有的权限菜单
+	   List<SysMenu> ownSysMenus =SysMenu.dao.find(ownMenuSql,sysUserRole.getStr("roleIds"));  // 拥有的权限菜单
 	   LOG.info("权限集合："+JSON.toJSONString(ownSysMenus));
 	   setSessionAttr(Constant.OWN_MENU, ownSysMenus);
 	 

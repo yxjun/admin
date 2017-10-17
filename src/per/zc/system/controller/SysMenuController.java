@@ -33,7 +33,7 @@ public class SysMenuController  extends BaseController {
 	
 	public void query() {
 		List<SysMenu> sysMenus = SysMenu.dao.findAll();
-		List<SysMenu> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus, sysMenus);
+		List<SysMenu> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus);
 		renderJson(treeNodes);
 	}
 	

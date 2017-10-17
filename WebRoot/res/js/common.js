@@ -64,4 +64,21 @@ function datagridCancelSelect(index,row){
 function treegridCancelSelect(row){
 	$("#dg").treegrid("unselect",row.id); // 此为role
 }
- 
+
+
+/**
+ *  数组去重
+ * @param a
+ * @returns {*}
+ */
+function removeDuplicatedItem(ar) {
+    var ret = [];
+
+    for (var i = 0, j = ar.length; i < j; i++) {
+        if (ret.indexOf(ar[i]) === -1 ) {
+            ret.push(ar[i]);
+        }
+    }
+
+    return ret;
+}
