@@ -1,6 +1,8 @@
 <#include "/WEB-INF/views/common/common.html"/>
 <@layout>
-<!-- 此处定义 页面单独的样式和 js -->
+<link rel="stylesheet" href="${ctx!}/res/ztree/css/zTreeStyle/zTreeStyle.css">
+<script src="${ctx!}/res/ztree/js/jquery.ztree.all.min.js"></script>
+
 </head>
 <body>
 <!-- 此处定义 body 部分 -->
@@ -35,9 +37,7 @@
     </div>
     <div data-options="region:'west',split:true,border:false" title="菜单"
          style="width: 200px; padding: 10px 20px;">
-        <ul id="menuTree">
-
-        </ul>
+        <ul id="menuTree" class="ztree"></ul>
     </div>
     <div data-options="region:'center',border:false  ">
         <!-- 此处不能填写 fit=true 否则会造成datagrid 显示异常。datagrid 自身和外部第一个容器包含即可 -->
@@ -48,17 +48,25 @@
 <script>
     (function () {
         $.getJSON("${ctx!}/treeMenu", function (d) {
-            $("#menuTree").tree(
-                {
-                    data: d,
-                    onClick: function (node) {
-                        if (node.children == undefined) {
-                            $.insdep.tabControl("${ctx!}" + node.attributes.url,
-                                "", node.text);
-                        }
 
-                    }
-                });
+            // 取消url 默认属性，菜单实体不用url变量名更好
+            for(var i =0;i<d.length;i++){
+                d[i]._url = d[i].url;
+                d[i].url = "javascript:void(0);";
+            }
+
+            // 叶子 点击 回调事件
+            var callbackObj = {};
+            callbackObj.onClick = function(event, treeId, treeNode, clickFlag){
+                if(!treeNode.isParent){
+                    $.insdep.tabControl("${ctx!}" + treeNode._url,
+                        "", treeNode.name);
+                };
+            }
+
+            // 构造树木
+            permissMenuTree($("#menuTree"),d,false,callbackObj);
+
         })
     })();
 </script>

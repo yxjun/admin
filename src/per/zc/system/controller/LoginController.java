@@ -38,27 +38,27 @@ public class LoginController  extends BaseController {
    public void index(){
 	   render( "system/login.html");  // 不可以斜杠开头，会认为 绝对路径
    }
-   
-   
-   @Clear(AuthorityInterceptor.class)
+
+
+	/**
+	 * 主操作界面
+	 */
+	@Clear(AuthorityInterceptor.class)
    @Before(SessionInViewInterceptor.class)
    @ActionKey("/main")
    public void main(){
 	   render("system/main.html");
    }
-   
-   
-   
-   @Clear(AuthorityInterceptor.class)
-   @ActionKey("/treeMenu")
+
+
+	/**
+	 * 权限菜单树
+	 */
+	@Clear(AuthorityInterceptor.class)
+    @ActionKey("/treeMenu")
    public void treeMenu(){
-	   // 查询菜单权限
 	   List<SysMenu> ownSysMenus = getSessionAttr(Constant.OWN_MENU) ;  // 拥有的权限菜单
-	   List<SysMenu> allSysMenus = SysMenu.dao.find("select * from sys_menu");        // 全部权限菜单
-	   
-	   List<TreeNode> treeNodes   = TreeBuild. easyuiTreeBuild(allSysMenus, ownSysMenus);
-	   renderJson(treeNodes);
-	    
+	   renderJson(ownSysMenus);
    }  
    
    /**
@@ -125,6 +125,8 @@ public class LoginController  extends BaseController {
 		  
 	   List<SysMenu> ownSysMenus =SysMenu.dao.find(ownMenuSql,sysUserRole.getStr("roleIds"));  // 拥有的权限菜单
 	   LOG.info("权限集合："+JSON.toJSONString(ownSysMenus));
+
+	   // 祖孙关系必须完整
 	   setSessionAttr(Constant.OWN_MENU, ownSysMenus);
 	 
 	   redirect("/main");	   

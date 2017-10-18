@@ -1,0 +1,59 @@
+<#include "/WEB-INF/views/common/common.html"/>
+<@layout>
+<link rel="stylesheet" href="${ctx!}/res/ztree/css/metroStyle/metroStyle.css">
+<script src="${ctx!}/res/ztree/js/jquery.ztree.all.min.js"></script>
+</head>
+<body>
+<div>
+    <ul id="menuTree" class="ztree"></ul>
+</div>
+<script>
+    /*
+       生成菜单树木， 可以range、showCheckbox、
+    */
+
+    (function(){
+
+        // 1: 获得数据
+        var treeJsonData;
+        //range  all 全部; own 个人 ;
+        // "${showCheckbox!}";   checkbox   0 不显示，1 显示
+        var url = "${ctx!}/sysMenu/tree?range=${range!}&scb=${showCheckbox!}"
+        $.getJSON(url,function(data){
+            treeJsonData = data;
+        })
+
+        // 2 ： 构造树
+        var showCheckBox = "${showCheckbox!}";
+        if(showCheckBox=="0"){
+            showCheckBox = false;
+        }else{
+            showCheckBox = true;
+        }
+        var setting = {
+            check: {
+                enable: showCheckBox
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey:'id',
+                    pIdKey:'pid',
+                    rootPId:null
+                }
+            }
+        };
+
+        var callbackObj = {}
+        var clickOpenTab = "${cot!}" ; // 0 不打开 tab, 1打开 tab
+        if(clickOpenTab == "1"){
+            callbackObj.onClick = functon(event, treeId, treeNode, clickFlag){
+                alert(JSON.stringify(treeNode))
+            }
+        }
+        setting.callback = callbackObj;
+
+        $.fn.zTree.init($("#menuTree"), setting, zNodes);
+    })();
+</script>
+</@layout>

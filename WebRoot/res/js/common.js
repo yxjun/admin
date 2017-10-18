@@ -82,3 +82,30 @@ function removeDuplicatedItem(ar) {
 
     return ret;
 }
+
+
+/**
+ * 构造菜单树
+ * @param treeObj  树dom
+ * @param treeData  树数据
+ * @param sck   是否显示checkbox
+ * @param cbk  树回调函数
+ */
+function permissMenuTree(treeObj,treeData,sck,cbk){
+    var setting = {
+        check: {
+            enable: sck
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey:'id',
+                pIdKey:'pid',
+                rootPId:null
+            }
+        },
+		callback:cbk
+    };
+
+    $.fn.zTree.init((treeObj), setting, treeData);
+}
