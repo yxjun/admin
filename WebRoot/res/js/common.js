@@ -65,6 +65,13 @@ function treegridCancelSelect(row){
 	$("#dg").treegrid("unselect",row.id); // 此为role
 }
 
+function unSelect(){
+    var selectRow = $("#dg").datagrid("getSelected");
+    if(selectRow!=null){
+        $("#dg").datagrid("unselectRow", $("#dg").datagrid("getRowIndex",selectRow));
+    }
+}
+
 
 /**
  *  数组去重
@@ -75,13 +82,16 @@ function removeDuplicatedItem(ar) {
     var ret = [];
 
     for (var i = 0, j = ar.length; i < j; i++) {
-        if (ret.indexOf(ar[i]) === -1 ) {
+        if (ret.indexOf(ar[i]) === -1 && ar[i]!=null  ) {
             ret.push(ar[i]);
         }
     }
 
     return ret;
 }
+
+
+
 
 
 /**
@@ -91,7 +101,7 @@ function removeDuplicatedItem(ar) {
  * @param sck   是否显示checkbox
  * @param cbk  树回调函数
  */
-function permissMenuTree(treeObj,treeData,sck,cbk){
+function menuTree(treeObj,treeData,sck,cbk){
     var setting = {
         check: {
             enable: sck
@@ -107,5 +117,6 @@ function permissMenuTree(treeObj,treeData,sck,cbk){
 		callback:cbk
     };
 
-    $.fn.zTree.init((treeObj), setting, treeData);
+    var tree =  $.fn.zTree.init((treeObj), setting, treeData);
+    return tree;
 }

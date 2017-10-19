@@ -1,9 +1,12 @@
 package per.zc.system.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
- 
 
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
@@ -55,10 +58,23 @@ public class LoginController  extends BaseController {
 	 * 权限菜单树
 	 */
 	@Clear(AuthorityInterceptor.class)
-    @ActionKey("/treeMenu")
-   public void treeMenu(){
-	   List<SysMenu> ownSysMenus = getSessionAttr(Constant.OWN_MENU) ;  // 拥有的权限菜单
-	   renderJson(ownSysMenus);
+    @ActionKey("/owntreeMenu")
+   public void owntreeMenu(){
+
+	    List<SysMenu> ownSysMenus = getSessionAttr(Constant.OWN_MENU) ;
+
+		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+		for(SysMenu sysMenu : ownSysMenus){
+			Map<String,Object> map = new HashMap<>();
+			map.put("id",sysMenu.getId());
+			map.put("pid",sysMenu.getPid());
+			map.put("icon",sysMenu.getIcon());
+			map.put("_url",sysMenu.getUrl());
+			map.put("name",sysMenu.getName());
+			maps.add(map);
+		}
+
+	   renderJson(maps);
    }  
    
    /**

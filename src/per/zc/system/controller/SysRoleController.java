@@ -1,6 +1,9 @@
 package per.zc.system.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jfinal.aop.Before;
 import com.jfinal.kit.StrKit;import com.jfinal.plugin.activerecord.Db;
@@ -8,6 +11,7 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import per.zc.common.constant.Constant;
+import per.zc.system.model.SysMenu;
 import per.zc.system.model.SysRole;
 import per.zc.system.model.SysRoleMenu;
 import per.zc.util.BaseController;
@@ -20,6 +24,36 @@ public class SysRoleController extends BaseController {
 		render("system/sysRole.html");
 
 	}
+
+	/**
+	 * 全部菜单树，并根据角色选中
+	 */
+	public void menuTreePermissionChecked(){
+		Integer id= getParaToInt(0);
+		List<SysRoleMenu> sysRoleMenus =
+				SysRoleMenu.dao.find("select * from sys_role_menu where role_id = ? ", id);
+
+		List<SysMenu> sysMenus = SysMenu.dao.findAll();
+		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+
+		for(SysMenu sysMenu : sysMenus){
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("id",sysMenu.getId());
+			map.put("pid",sysMenu.getPid());
+			map.put("name",sysMenu.getName());
+			map.put("open",true);
+			for(SysRoleMenu sysRoleMenu : sysRoleMenus){
+				if(sysRoleMenu.getMenuId()==sysMenu.getId()){
+					map.put("checked",true);
+					break;
+				}
+			}
+			maps.add(map);
+		}
+		renderJson(maps);
+	}
+
+
 
 	@Before(SearchSql.class)
 	public void query() {
@@ -80,15 +114,7 @@ public class SysRoleController extends BaseController {
 	}
 	
 	
-	/**
-	 * 通过角色id 查询  权限
-	 */
-	public void  getPermission(){
-		Integer id= getParaToInt(0);
-		List<SysRoleMenu> sysRoleMenus = SysRoleMenu.dao.find("select * from sys_role_menu where role_id = ? ", id);
-		renderJson(sysRoleMenus);
-		
-	}
+
 
 	@Before(Tx.class)
 	public void givePermission(){

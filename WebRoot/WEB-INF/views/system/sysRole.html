@@ -1,8 +1,12 @@
 <#include "/WEB-INF/views/common/common.html"/> <@layout> <!-- 此处定义 页面单独的样式和 js -->
+<link rel="stylesheet" href="${ctx!}/res/ztree/css/zTreeStyle/zTreeStyle.css">
+<script src="${ctx!}/res/ztree/js/jquery.ztree.all.min.js"></script>
 </head>
 <body>
 	<script type="text/javascript">
 		var url;
+
+		/*新增*/
 		function newSysRole() {
 			/* .dialog('center')  横向纵向正中央*/
 			$('#dlg').dialog('open').dialog('setTitle', '新建角色');
@@ -10,6 +14,7 @@
 			url = '${ctx!}/sysRole/add';
 		}
 
+		/*编辑*/
 		function editSysRole() {
 			var row = $('#dg').datagrid('getSelected');
 			if (row) {
@@ -22,7 +27,7 @@
 				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');
 			}
 		}
-
+        /*保存*/
 		function saveSysRole() {
 			$('#fm').form('submit', {
 				url : url,
@@ -34,9 +39,8 @@
 					if (result.indexOf("成功") >= 0) {
 						successMsgPretty(null, result);
 						$('#dlg').dialog('close');
-						// close the dialog
 						$('#dg').datagrid('reload');
-						// reload the user data
+                        $('#fm').form('clear');
 					} else {
 						errMsgPretty(null, result);
 					}
@@ -44,6 +48,8 @@
 			});
 		}
 
+
+		/*角色删除*/
 		function deleteSysRole() {
 			var row = $('#dg').datagrid('getSelected');
 			if (row) {
@@ -68,11 +74,18 @@
 
 
         /**
-		 * 赋权， 不可断链
+		 *  角色 分配权限
          */
 		function givePermission(){
-            var permissionRowAry = $("#tg").treegrid("getCheckedNodes");
-            if(permissionRowAry.length==0){
+
+		     var treeObj = $.fn.zTree.getZTreeObj("allMenuTree");
+		     if(treeObj==null ||treeObj == undefined){
+                 $.messager.alert('警告', '请选择要分配权限的角色!', 'warning');
+                 return;
+			 }
+		     var checkNodes = treeObj.getCheckedNodes(true);
+
+            if(checkNodes.length==0){
                 $.messager.alert('警告', '请选择要分配的权限菜单!', 'warning');
                 return;
 			}
@@ -84,25 +97,16 @@
 			}
 
             var permissIds = [];
-            for(var i = 0;i<permissionRowAry.length;i++){
-                if($.trim(permissionRowAry[i].id)!=""
-					&& permissionRowAry[i].id!=undefined
-					&& permissionRowAry[i].id !=null){
-                    permissIds.push(permissionRowAry[i].id);
-				}
-
-                if($.trim(permissionRowAry[i].pid)!=""
-                    && permissionRowAry[i].pid!=undefined
-                    && permissionRowAry[i].pid !=null){
-                    permissIds.push(permissionRowAry[i].pid);
-                }
-
+            for(var i = 0;i<checkNodes.length;i++){
+                permissIds.push(checkNodes[i].id);
+                permissIds.push(checkNodes[i].pid);
 			}
 
 			// 去重
 			permissIds = removeDuplicatedItem(permissIds);
 
-            console.table([{be:permissIds.toString(),af:permissIds.toString()}]);
+            //console.table([{be:permissIds.toString(),af:permissIds2.toString()}]);
+
             $.post('${ctx!}/sysRole/givePermission', {
                 roleId : roleRow.id,
 				permissIds : permissIds.join(";")
@@ -117,38 +121,20 @@
 
 		}
 
-
 	</script>
 
 	<div id="nestLayout" class="easyui-layout" fit="true" >
 		<div  data-options="region:'east' " title="权限树"
-		split="true" border="false"
-		style="width: 400px;">
-			<table  id="tg"   class="easyui-treegrid"
-			border="false" fit="true" toolbar="#tb2"
-			data-options="
-			url: '${ctx!}/sysMenu/query',
-			method: 'get',
-			checkbox: true,
-			rownumbers: true,
-			idField: 'id',
-			treeField: 'name',
-			/*onlyLeafCheck:true*/
-			">
-				<thead>
-					<tr>
-						<th field="name" width="150">菜单名</th>
-						<th field="url" width="150">菜单地址</th>
-					</tr>
-				</thead>
-			</table>
+		split="true" border="false" collapsed="true" tools="#treeTB"
+		style="width: 300px;">
+			<ul id="allMenuTree" class="ztree"></ul>
 		</div>
 		<div data-options="region:'center' "  border="false"   split="true">
 
 			<table id="dg" class="easyui-datagrid  " url="${ctx!}/sysRole/query"
 			toolbar="#tb" rownumbers="true" border="false" singleSelect="true"
 			fit="true" pagination="true"
-			data-options="onDblClickRow:datagridCancelSelect">
+		     >
 				<thead>
 					<tr>
 						<th data-options="field:'ck',checkbox:true"></th>
@@ -196,11 +182,12 @@
 				onclick="editSysRole()">编辑</a><a href="#"
 				class="easyui-linkbutton  " iconCls="icon-remove" plain="true"
 				onclick="deleteSysRole()">删除</a>
-			</div>
-			<div id="tb2">
 				<a href="#"
-				class="easyui-linkbutton  " iconCls="icon-user-config" plain="true"
-				onclick="givePermission()">授权</a>
+				   class="easyui-linkbutton  " iconCls="icon-cancel" plain="true"
+				   onclick="unSelect()">取选</a>
+			</div>
+			<div id="treeTB"   >
+				<a href="#" iconCls="icon-save"   onclick="givePermission()" title="授权"></a>
 			</div>
 		</div>
 	</div>
@@ -208,22 +195,18 @@
 	<script>
 		$(function() {
 
+		    var unselectFlag = false;
 			$("#dg").datagrid({
 				onSelect : function(index, row) {
-					console.log(row.id);
-					var checkedNodes = $("#tg").treegrid("getCheckedNodes");
-					for(var i=0;i<checkedNodes.length;i++){
-						 $("#tg").treegrid("uncheckNode",checkedNodes[i].id);
-					}
-				 
-					var url = "${ctx!}/sysRole/getPermission/" + row.id;
+					var url = "${ctx!}/sysRole/menuTreePermissionChecked/" + row.id;
 					$.getJSON(url, function(data) {
-						for (var i = 0; i < data.length; i++) {
-						        if($("#tg").treegrid("getChildren",data[i].menuId).length == 0){
-                                    $("#tg").treegrid("checkNode",data[i].menuId);
-								}
-						}
+                        menuTree($("#allMenuTree"),data,true);
+                        $("#nestLayout").layout("expand","east");
 					});
+				},
+                onUnselect:function(index,row){
+                    $("#nestLayout").layout("collapse","east");
+                    $.fn.zTree.destroy("allMenuTree");
 				}
 			})
 		});

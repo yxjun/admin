@@ -36,8 +36,9 @@ public class SysMenuController  extends BaseController {
 		List<SysMenu> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus);
 		renderJson(treeNodes);
 	}
-	
-    
+
+
+
 	
 	
 	public void add(){

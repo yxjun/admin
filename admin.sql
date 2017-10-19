@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2017-10-17 22:25:49
+Date: 2017-10-19 16:21:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `sys_menu` (
   `sort` int(11) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -94,7 +94,7 @@ CREATE TABLE `sys_role` (
   `create_time` datetime DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_role
@@ -102,6 +102,7 @@ CREATE TABLE `sys_role` (
 INSERT INTO `sys_role` VALUES ('3', '管理员', '分配所有权限222', '2017-10-07 21:22:34', '0');
 INSERT INTO `sys_role` VALUES ('12', '员工', 'staff', null, '2');
 INSERT INTO `sys_role` VALUES ('13', '主管', '主管', null, '3');
+INSERT INTO `sys_role` VALUES ('15', '1', '1', null, '4');
 
 -- ----------------------------
 -- Table structure for `sys_role_menu`
