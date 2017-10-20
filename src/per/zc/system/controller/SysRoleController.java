@@ -64,10 +64,12 @@ public class SysRoleController extends BaseController {
 		String where = getAttr(Constant.SEARCH_SQL);
 
 		String sqlSelect = " select * ";
-		String sqlExceptSelect = " from sys_role order by sort asc ";
+		String sqlExceptSelect = " from sys_role   ";
 		if (StrKit.notBlank(where)) {
 			sqlExceptSelect += " where " + where;
 		}
+
+		where += "order by id asc , sort asc";
 		Page<SysRole> sysMenus = SysRole.dao.paginate(pageNumber, pageSize, sqlSelect, sqlExceptSelect);
 
 		renderDatagrid(sysMenus);

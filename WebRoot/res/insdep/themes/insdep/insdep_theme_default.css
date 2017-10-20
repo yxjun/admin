@@ -88,7 +88,7 @@ i, cite, em, var, address, dfn {/*斜体*/
 /*修改此处的头部样式*/
 .theme-header-layout
 { height:46px !important; 
-  background: #5677fc url(images/mylogo3.png) left center no-repeat;
+  background: #1b8cf2 url(images/mylogo3.png) left center no-repeat;
 	-moz-background-size:270px 46px; /* 老版本的 Firefox */
 	background-size:270px 46px;
 }

@@ -173,3 +173,17 @@ var EasyTree = function() {
 		build : ConvertToTreeGridJson
 	};
 }
+
+
+$(function(){
+
+	// 搜索框绑定 enter事件
+	$("#searchBoxSpan").on('keydown'," input",function(e){
+        if (e.keyCode == 13) {
+            //alert('enter');
+            queryModel();
+        }
+	});
+
+
+});

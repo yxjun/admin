@@ -1,10 +1,12 @@
 <#include "/WEB-INF/views/common/common.html"/>
 <@layout>
-<link rel="stylesheet" href="${ctx!}/res/ztree/css/metroStyle/metroStyle.css">
+<link rel="stylesheet" href="${ctx!}/res/ztree/css/bootstrapStyle/bootstrapStyle.css">
 <script src="${ctx!}/res/ztree/js/jquery.ztree.all.min.js"></script>
+<script src="${ctx!}/res/ztree/js/jquery.ztree.exhide.min.js"></script>
 <style>
     .sideBar{
-        background-color: rgba(144, 142, 101, 0.31);
+       background-color: rgba(76, 175, 80, 0.5);;
+        color:white !important;
     }
 </style>
 </head>
@@ -39,9 +41,11 @@
             </div>
         </div>
     </div>
-    <div     data-options="region:'west',split:true,border:false" title="菜单"
-             headerCls="sideBar"  bodyCls="sideBar"
+    <div  data-options="region:'west',split:true,border:false" title="个人菜单"
+          headerCls="sideBar" bodyCls="sideBar"
          style="width: 200px; padding: 10px 20px;  ">
+
+        <input type="text" class="query" id="treeFiltrInput" placeholder="搜索">
         <ul id="menuTree" class="ztree"></ul>
     </div>
     <div data-options="region:'center',border:false  ">
@@ -59,6 +63,10 @@
 </div>
 <script>
     (function () {
+
+        var treeObj;
+
+        // 左侧菜单树构造
         $.getJSON("${ctx!}/owntreeMenu", function (d) {
 
             // 叶子 点击 回调事件
@@ -70,9 +78,35 @@
                 };
             }
             // 构造树
-           var treeObj =  menuTree($("#menuTree"),d,false,callbackObj);
+            treeObj =  menuTree($("#menuTree"),d,false,callbackObj);
             var nodes = treeObj.getNodes();
             treeObj.expandNode(nodes[0]);
+        })  ;
+
+        //模糊匹配
+        var hiddenNodes=[]; //用于存储被隐藏的结点
+        function filter(){
+            //显示上次搜索后背隐藏的结点
+            treeObj.showNodes(hiddenNodes);
+
+            //查找不符合条件的叶子节点
+            function filterFunc(node){
+                var _keywords=$("#treeFiltrInput").val();
+                if(node.isParent||node.name.indexOf(_keywords)!=-1) return false;
+                return true;
+            };
+
+            //获取不符合条件的叶子结点
+            hiddenNodes=treeObj.getNodesByFilter(filterFunc);
+
+            //隐藏不符合条件的叶子结点
+            treeObj.hideNodes(hiddenNodes);
+        };
+        $("#treeFiltrInput").on("keydown",function(e){
+            if (e.keyCode == 13) {
+                alert('enter');
+                filter();
+            }
 
         })
     })();

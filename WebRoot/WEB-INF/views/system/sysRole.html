@@ -1,5 +1,5 @@
 <#include "/WEB-INF/views/common/common.html"/> <@layout> <!-- 此处定义 页面单独的样式和 js -->
-<link rel="stylesheet" href="${ctx!}/res/ztree/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="${ctx!}/res/ztree/css/bootstrapStyle/bootstrapStyle.css">
 <script src="${ctx!}/res/ztree/js/jquery.ztree.all.min.js"></script>
 </head>
 <body>
@@ -121,6 +121,15 @@
 
 		}
 
+        //条件查询
+        function queryModel() {
+            var queryParams = {
+                search_LIKE_role_name : $("#roleName").textbox("getValue"),
+            };
+            //alert(JSON.stringify(getQueryParam('searchBoxSpan')))
+            $('#dg').datagrid('load', queryParams);
+        }
+
 	</script>
 
 	<div id="nestLayout" class="easyui-layout" fit="true" >
@@ -188,6 +197,10 @@
 				<a href="#"
 				   class="easyui-linkbutton  " iconCls="icon-cancel" plain="true"
 				   onclick="unSelect()">取选</a>
+				<span id="searchBoxSpan"  class="left">
+				<input id="roleName" prompt="角色名"  class="easyui-textbox" style="width:150px"  >
+				<a href="#" class="easyui-linkbutton" iconCls="icon-search"  onclick="queryModel()" >Search</a>
+		       </span>
 			</div>
 			<div id="treeTB"   >
 				<a href="#" iconCls="icon-save"   onclick="givePermission()" title="授权"></a>
@@ -197,8 +210,6 @@
 
 	<script>
 		$(function() {
-
-		    var unselectFlag = false;
 			$("#dg").datagrid({
 				onSelect : function(index, row) {
 					var url = "${ctx!}/sysRole/menuTreePermissionChecked/" + row.id;
