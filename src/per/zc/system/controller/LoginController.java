@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
+ 
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;

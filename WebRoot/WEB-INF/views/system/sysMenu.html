@@ -73,23 +73,28 @@
 				});
 			}
 		}
+		
+		
+		//条件查询
+		function queryModel(){
+			  alert(JSON.stringify(getQueryParam('searchBoxSpan')))
+			  $('#dg').datagrid('load',getQueryParam('searchBoxSpan'));
+		}
 	</script>
 
-	<table id="dg" class="easyui-treegrid" url="${ctx!}/sysMenu/query"
+	<table id="dg" class="easyui-datagrid" url="${ctx!}/sysMenu/query"
 		toolbar="#tb" rownumbers="true" border="false" fit="true"
-		singleSelect="true"
-		 idField='id' ,
-        treeField='name'
-         data-options="onDblClickRow:treegridCancelSelect"
+		pagination="true"
         >
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
-				<!-- 	<th field="id" width="50">菜单Id</th> -->
+				<th field="id" width="50">菜单Id</th> 
 				<th field="name" width="150">菜单名</th>
 				<th field="url" width="150">菜单地址</th>
 				<th field="icon" width="150">图标</th>
 				<th field="sort" width="50">排序</th>
+				<th field="pid" width="50"  >父菜单Id</th> 
 
 			</tr>
 		</thead>
@@ -141,7 +146,13 @@
 			iconCls="icon-edit" plain="true" onclick="editSysMenu()">编辑</a>
 	    <a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
 			plain="true" onclick="deleteSysMenu()">删除</a>  
-			
+	   <span id="searchBoxSpan" style="position:absolute; right:200px">
+		      菜单名: <input name="search_LIKE_name" class="easyui-textbox query" style="width:110px">
+		      
+
+	      <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="queryModel()" >Search</a>
+	   </span>
+	     
 	</div>
 	 
 	</@layout>

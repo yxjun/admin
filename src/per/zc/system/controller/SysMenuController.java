@@ -12,6 +12,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 
 import per.zc.common.constant.Constant;
 import per.zc.system.model.SysMenu;
+import per.zc.system.model.SysRole;
 import per.zc.util.BaseController;
 import per.zc.util.SearchSql;
 import per.zc.util.TreeBuild;
@@ -31,10 +32,21 @@ public class SysMenuController  extends BaseController {
 	
 	
 	
+	@Before(SearchSql.class)
 	public void query() {
-		List<SysMenu> sysMenus = SysMenu.dao.findAll();
-		List<SysMenu> treeNodes =  TreeBuild.easyuiMenuTreegridBuild(sysMenus);
-		renderJson(treeNodes);
+		int pageNumber = getAttr("pageNumber");
+		int pageSize = getAttr("pageSize");
+		String where = getAttr(Constant.SEARCH_SQL);
+
+		String sqlSelect = " select * ";
+		String sqlExceptSelect = " from sys_menu  ";
+		if (StrKit.notBlank(where)) {
+			sqlExceptSelect += " where " + where;
+		}
+		sqlExceptSelect += " order by sort asc ";
+		Page<SysMenu> sysMenus = SysMenu.dao.paginate(pageNumber, pageSize, sqlSelect, sqlExceptSelect);
+
+		renderDatagrid(sysMenus);
 	}
 
 

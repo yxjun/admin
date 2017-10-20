@@ -72,6 +72,10 @@ function unSelect(){
     }
 }
 
+function unselectAll(){
+	$("#dg").datagrid("unselectAll");
+}
+
 
 /**
  *  数组去重
@@ -90,6 +94,40 @@ function removeDuplicatedItem(ar) {
     return ret;
 }
 
+
+
+/**
+ * 根据给定的html元素，寻找其范围内带有query样式的对象，并取出对应值，组成查询键值对
+ */
+var getQueryParam = function(id) {
+	var param = {};
+	$('#' + id).find('.query').each(function() {
+		var name = $(this).attr('name');
+		var val = $(this).val();
+		if ($(this).hasClass('combobox-f')) {
+			name = $(this).attr('comboname');
+			val = $(this).combobox('getValue');
+		}
+		if ($(this).hasClass('combogrid-f')) {
+            name = $(this).attr('comboname');
+            val = $(this).combogrid('getValue');
+        }
+        if ($(this).hasClass('combotree-f')) {
+            name = $(this).attr('comboname');
+            val = $(this).combotree('getValue');
+        }
+        if ($(this).hasClass('datebox-f')) {
+            name = $(this).attr('comboname');
+            val = $(this).datebox('getValue');
+        }
+        if ($(this).hasClass('datetimebox-f')) {
+            name = $(this).attr('comboname');
+            val = $(this).datetimebox('getValue');
+        }
+		param[name] = val;
+	});
+	return param;
+};
 
 
 
