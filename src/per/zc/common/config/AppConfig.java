@@ -46,7 +46,9 @@ public class AppConfig extends JFinalConfig {
 		//设置json工厂
 		me.setJsonFactory(FastJsonFactory.me());
 		
-		
+		// json日期格式
+		me.setJsonDatePattern("yyyy-MM-dd HH:mm:ss");
+		 	
 	}
 	 
 	@Override

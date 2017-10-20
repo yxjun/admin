@@ -38,6 +38,8 @@ public class SysMenuController  extends BaseController {
 	public void query() {
 		int pageNumber = getAttr("pageNumber");
 		int pageSize = getAttr("pageSize");
+		
+		// TODO  pid 只能查出子，不能查出孙，需要修改
 		String where = getAttr(Constant.SEARCH_SQL);
 
 		String sqlSelect = " select * ";
@@ -45,7 +47,7 @@ public class SysMenuController  extends BaseController {
 		if (StrKit.notBlank(where)) {
 			sqlExceptSelect += " where " + where;
 		}
-		sqlExceptSelect += " order by sort asc ";
+		sqlExceptSelect += " order by id asc , sort asc ";
 		Page<SysMenu> sysMenus = SysMenu.dao.paginate(pageNumber, pageSize, sqlSelect, sqlExceptSelect);
 
 		renderDatagrid(sysMenus);
@@ -110,7 +112,7 @@ public class SysMenuController  extends BaseController {
 			Map<String,Object> map = new HashMap<>();
 			map.put("id", sysMenu.getId());
 			map.put("pid", sysMenu.getPid());
-			map.put("name", sysMenu.getName());
+			map.put("text", sysMenu.getName());
 			map.put("icon", sysMenu.getIcon());
 			map.put("open", true);
 			maps.add(map);

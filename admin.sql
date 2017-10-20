@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2017-10-19 16:21:07
+Date: 2017-10-20 17:42:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `sys_menu` (
   `sort` int(11) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -35,7 +35,6 @@ CREATE TABLE `sys_menu` (
 INSERT INTO `sys_menu` VALUES ('5', '系统管理', null, null, '0', null);
 INSERT INTO `sys_menu` VALUES ('6', '菜单管理', '/sysMenu', null, '0', '5');
 INSERT INTO `sys_menu` VALUES ('23', '角色管理', '/sysRole', null, '2', '5');
-INSERT INTO `sys_menu` VALUES ('45', '机构管理', '/sysOrg', null, '4', '5');
 
 -- ----------------------------
 -- Table structure for `sys_oplog`
@@ -94,7 +93,7 @@ CREATE TABLE `sys_role` (
   `create_time` datetime DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_role
@@ -120,7 +119,6 @@ CREATE TABLE `sys_role_menu` (
 INSERT INTO `sys_role_menu` VALUES ('3', '5');
 INSERT INTO `sys_role_menu` VALUES ('3', '6');
 INSERT INTO `sys_role_menu` VALUES ('3', '23');
-INSERT INTO `sys_role_menu` VALUES ('3', '45');
 
 -- ----------------------------
 -- Table structure for `sys_user`

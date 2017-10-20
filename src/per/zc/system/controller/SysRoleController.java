@@ -1,6 +1,7 @@
 package per.zc.system.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,7 @@ public class SysRoleController extends BaseController {
 	
 	public void add() {
 		SysRole sysRole = getBean(SysRole.class, "");
+		sysRole.setCreateTime(new Date());
 		boolean saveFlag = sysRole.save();
 		if (saveFlag) {
 			renderText(Constant.ADD_SUCCESS);
@@ -116,6 +118,9 @@ public class SysRoleController extends BaseController {
 	
 
 
+	/**
+	 * 用户赋予权限
+	 */
 	@Before(Tx.class)
 	public void givePermission(){
 		Integer roleId  =getParaToInt("roleId");

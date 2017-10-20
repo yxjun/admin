@@ -8,27 +8,43 @@
 	<script type="text/javascript">
 		var url;
 		function newSysMenu() {
-			/* .dialog('center')  横向纵向正中央*/
+
 			$('#dlg').dialog('open').dialog('setTitle', '新建菜单');
+			
+			// 清理表单
 			$('#fm').form('clear');
-			var row = $('#dg').treegrid('getSelected');
-
-			if (row) {
-				$("#pid").val(row.id);
-				$("#pidName").textbox("setValue", row.name);
-			}
-
+			
+			// 清理 combotree filter
+            $("#pidSelect").combotree('tree').tree("doFilter",'');
+            
 			url = '${ctx!}/sysMenu/add';
 		}
 
 		function editSysMenu() {
-			var row = $('#dg').treegrid('getSelected');
+			var row = $('#dg').datagrid('getSelected');
 			if (row) {
-				/* .dialog('center')  横向纵向正中央*/
 				$('#dlg').dialog('open').dialog('setTitle', '编辑菜单');
+				
 				$('#fm').form('clear');
+				
 				$('#fm').form('load', row);
-				$("#pidName").textbox("setValue", $("#dg").treegrid('getParent', row.id).name);
+				
+				console.log(row.pid);
+			 
+				// 显示值，过滤自身
+				$("#pidSelect").combotree({
+					value:row.pid == undefined ? null:row.pid,
+					filter : function(q, node) {
+						if(node.id == q || node.pid == q){
+							console.log("false");
+							return false;
+						}else{
+							return true;
+						}	 
+					}
+				}) 
+               $("#pidSelect").combotree('tree').tree("doFilter",row.id);
+               
 				url = '${ctx!}/sysMenu/update?id=' + row.id;
 			} else {
 				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');
@@ -42,14 +58,11 @@
 					return $(this).form('validate');
 				},
 				success : function(result) {
-
 					if (result.indexOf("成功") >= 0) {
 						successMsgPretty(null, result);
-
 						$('#dlg').dialog('close');
-						// close the dialog
-						$('#dg').treegrid('reload');
-						// reload the user data
+						$('#dg').datagrid('reload');
+						combotreeLoadData();
 					} else {
 						errMsgPretty(null, result);
 					}
@@ -67,9 +80,9 @@
 						}, function(result) {
 							if (result.indexOf("成功") >= 0) {
 								successMsgPretty(null, result);
-								$('#dg').treegrid('reload');
-								// reload the user data
+								$('#dg').datagrid('reload');
 								$('#dg').datagrid('clearSelections');
+								combotreeLoadData();
 							} else {
 								errMsgPretty(null, result);
 							}
@@ -82,25 +95,32 @@
 
 		//条件查询
 		function queryModel() {
+			var queryParams = {
+				search_LIKE_name : $("#name").textbox("getValue"),
+				search_EQ_pid : $("#pidHid").val()
+			};
 			//alert(JSON.stringify(getQueryParam('searchBoxSpan')))
-			$('#dg').datagrid('load', getQueryParam('searchBoxSpan'));
+			$('#dg').datagrid('load', queryParams);
 		}
+
 	</script>
 
 	<table id="dg" class="easyui-datagrid" url="${ctx!}/sysMenu/query"
-	toolbar="#tb" rownumbers="true" border="false" fit="true"
-	pagination="true"
-	>
+	toolbar="#tb" 
+	rownumbers="true"
+	 border="false"
+	 fit="true"
+	singleSelect="true"
+	pagination="true"  >
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
-				<th field="id" width="50">菜单Id</th>
+				<th field="id" width="50">菜单id</th>
 				<th field="name" width="150">菜单名</th>
 				<th field="url" width="150">菜单地址</th>
 				<th field="icon" width="150">图标</th>
 				<th field="sort" width="50">排序</th>
-				<th field="pid" width="50"  >父菜单Id</th>
-
+				<th field="pid" width="50">父菜单id</th>
 			</tr>
 		</thead>
 	</table>
@@ -111,27 +131,30 @@
 		style="margin: 0; padding: 20px 50px">
 			<input type="hidden" name="id" />
 
-			<div style="margin-bottom: 10px">
-				<input type="hidden" id="pid" name="pid" />
-				<input name="pidName"
-				id="pidName" class="easyui-textbox" label="父菜单:"
-				disabled="disabled" style="width: 100%">
+			<div style="margin-bottom: 20px">
+				<input type="hidden" id="pidFormHid" name="pid" />
+				<label class="label-top">父菜单:</label>
+				<input id="pidSelect"    class="easyui-combotree" style="width: 100%" >
 			</div>
 
-			<div style="margin-bottom: 10px">
+			<div style="margin-bottom: 20px">
+				<label class="label-top">菜单名:</label>
 				<input name="name" class="easyui-textbox" required="true"
-				label="菜单名:" style="width: 100%">
+				  style="width: 100%">
 			</div>
-			<div style="margin-bottom: 10px">
-				<input name="url" class="easyui-textbox" label="菜单地址:"
+			<div style="margin-bottom: 20px">
+				<label class="label-top">菜单地址:</label>
+				<input name="url" class="easyui-textbox"  
 				style="width: 100%">
 			</div>
-			<div style="margin-bottom: 10px">
-				<input name="icon" class="easyui-textbox" label="图标:"
+			<div style="margin-bottom: 20px">
+				<label class="label-top">图标:</label>
+				<input name="icon" class="easyui-textbox"  
 				style="width: 100%">
 			</div>
-			<div style="margin-bottom: 10px">
-				<input name="sort" class="easyui-numberbox" label="排序:"
+			<div style="margin-bottom:20px">
+				<label class="label-top">排序:</label>
+				<input name="sort" class="easyui-numberbox" 
 				style="width: 100%">
 			</div>
 		</form>
@@ -152,10 +175,47 @@
 		iconCls="icon-edit" plain="true" onclick="editSysMenu()">编辑</a>
 		<a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
 		plain="true" onclick="deleteSysMenu()">删除</a>
-		<span id="searchBoxSpan" style="margin-left:50px" class="left">
-			<input name="search_LIKE_name" class="query" style="width:150px" placeholder="菜单名">
-			<input id="menuPid" name="search_EQ_pid" class="query" style="width:150px" placeholder="父菜单"  onclick="showMenu();return false;">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-search" onfocus="showMenu()" >Search</a> </span>
-		 
+		<a href="#"
+		class="easyui-linkbutton  " iconCls="icon-cancel" plain="true"
+		onclick="unSelect()">取选</a>
+		<span id="searchBoxSpan"  class="left">
+			<input id="name" prompt="菜单名"  class="easyui-textbox" style="width:150px"  >
+			<input id="pidHid"  type="hidden" />
+			<input id="pid" prompt="父菜单"  class="easyui-combotree" style="width:150px"  >
+			<a href="#" class="easyui-linkbutton" iconCls="icon-search"  onclick="queryModel()" >Search</a> </span>
 	</div>
+	<script type="text/javascript" charset="utf-8">
+		// 数据
+		function getMenuTreeData() {
+			var data;
+			$.ajaxSettings.async = false;
+			$.getJSON("${ctx!}/sysMenu/allMenu", function(d) {
+				var easytree = new EasyTree();
+				data = easytree.build(d, "id", "pid", "text,icon,pid");
+			})
+			return data;
+		}
+
+		// 替换数据
+		function combotreeLoadData() {
+			var data = getMenuTreeData();
+			$("#pid").combotree({
+				data : data,
+				onSelect : function(node) {
+					$("#pidHid").val(node.id);
+				}
+			})
+			$("#pidSelect").combotree({
+				data : data,
+				onSelect : function(node) {
+					$("#pidFormHid").val(node.id);
+				}
+			})
+		}
+
+		// 初始化
+		$(function() {
+			combotreeLoadData();
+		});
+	</script>
 	</@layout>
