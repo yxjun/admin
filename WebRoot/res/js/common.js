@@ -104,7 +104,7 @@ var getQueryParam = function(id) {
 	$('#' + id).find('.query').each(function() {
 		var name = $(this).attr('name');
 		var val = $(this).val();
-		if ($(this).hasClass('combobox-f')) {
+		/*if ($(this).hasClass('combobox-f')) {
 			name = $(this).attr('comboname');
 			val = $(this).combobox('getValue');
 		}
@@ -123,7 +123,7 @@ var getQueryParam = function(id) {
         if ($(this).hasClass('datetimebox-f')) {
             name = $(this).attr('comboname');
             val = $(this).datetimebox('getValue');
-        }
+        }*/
 		param[name] = val;
 	});
 	return param;

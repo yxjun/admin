@@ -1,5 +1,7 @@
 <#include "/WEB-INF/views/common/common.html"/>
 <@layout>
+<link rel="stylesheet" href="${ctx!}/res/ztree/css/zTreeStyle/zTreeStyle.css">
+<script src="${ctx!}/res/ztree/js/jquery.ztree.all.min.js"></script>
 <!-- 此处定义 页面单独的样式和 js -->
 </head>
 <body>
@@ -7,8 +9,7 @@
 		var url;
 		function newSysMenu() {
 			/* .dialog('center')  横向纵向正中央*/
-			$('#dlg').dialog('open') 
-					.dialog('setTitle', '新建菜单');
+			$('#dlg').dialog('open').dialog('setTitle', '新建菜单');
 			$('#fm').form('clear');
 			var row = $('#dg').treegrid('getSelected');
 
@@ -19,20 +20,21 @@
 
 			url = '${ctx!}/sysMenu/add';
 		}
+
 		function editSysMenu() {
 			var row = $('#dg').treegrid('getSelected');
 			if (row) {
 				/* .dialog('center')  横向纵向正中央*/
-				$('#dlg').dialog('open').dialog('setTitle',
-						'编辑菜单');
+				$('#dlg').dialog('open').dialog('setTitle', '编辑菜单');
 				$('#fm').form('clear');
 				$('#fm').form('load', row);
-				$("#pidName").textbox("setValue",$("#dg").treegrid('getParent',row.id).name);
+				$("#pidName").textbox("setValue", $("#dg").treegrid('getParent', row.id).name);
 				url = '${ctx!}/sysMenu/update?id=' + row.id;
 			} else {
 				$.messager.alert('警告', '修改之前请先选择一条记录!', 'warning');
 			}
 		}
+
 		function saveSysMenu() {
 			$('#fm').form('submit', {
 				url : url,
@@ -42,16 +44,19 @@
 				success : function(result) {
 
 					if (result.indexOf("成功") >= 0) {
-						successMsgPretty(null,result);
+						successMsgPretty(null, result);
 
-						$('#dlg').dialog('close'); // close the dialog
-						$('#dg').treegrid('reload'); // reload the user data
+						$('#dlg').dialog('close');
+						// close the dialog
+						$('#dg').treegrid('reload');
+						// reload the user data
 					} else {
-						errMsgPretty(null,result);
+						errMsgPretty(null, result);
 					}
 				}
 			});
 		}
+
 		function deleteSysMenu() {
 			var row = $('#dg').datagrid('getSelected');
 			if (row) {
@@ -61,11 +66,12 @@
 							id : row.id
 						}, function(result) {
 							if (result.indexOf("成功") >= 0) {
-								successMsgPretty(null,result);
-								$('#dg').treegrid('reload'); // reload the user data
-                                $('#dg').datagrid('clearSelections');
+								successMsgPretty(null, result);
+								$('#dg').treegrid('reload');
+								// reload the user data
+								$('#dg').datagrid('clearSelections');
 							} else {
-								errMsgPretty(null,result);
+								errMsgPretty(null, result);
 							}
 
 						}, 'text');
@@ -73,86 +79,83 @@
 				});
 			}
 		}
-		
-		
+
 		//条件查询
-		function queryModel(){
-			  alert(JSON.stringify(getQueryParam('searchBoxSpan')))
-			  $('#dg').datagrid('load',getQueryParam('searchBoxSpan'));
+		function queryModel() {
+			//alert(JSON.stringify(getQueryParam('searchBoxSpan')))
+			$('#dg').datagrid('load', getQueryParam('searchBoxSpan'));
 		}
 	</script>
 
 	<table id="dg" class="easyui-datagrid" url="${ctx!}/sysMenu/query"
-		toolbar="#tb" rownumbers="true" border="false" fit="true"
-		pagination="true"
-        >
+	toolbar="#tb" rownumbers="true" border="false" fit="true"
+	pagination="true"
+	>
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
-				<th field="id" width="50">菜单Id</th> 
+				<th field="id" width="50">菜单Id</th>
 				<th field="name" width="150">菜单名</th>
 				<th field="url" width="150">菜单地址</th>
 				<th field="icon" width="150">图标</th>
 				<th field="sort" width="50">排序</th>
-				<th field="pid" width="50"  >父菜单Id</th> 
+				<th field="pid" width="50"  >父菜单Id</th>
 
 			</tr>
 		</thead>
 	</table>
 
-	<div id="dlg" class="easyui-dialog" style="width: 400px; top:30px " closed="true"   
-		buttons="#dlg-buttons">
+	<div id="dlg" class="easyui-dialog" style="width: 400px; top:30px " closed="true"
+	buttons="#dlg-buttons">
 		<form id="fm" method="post" novalidate
-			style="margin: 0; padding: 20px 50px">
+		style="margin: 0; padding: 20px 50px">
 			<input type="hidden" name="id" />
-			
+
 			<div style="margin-bottom: 10px">
-				<input type="hidden" id="pid" name="pid" /> <input name="pidName"
-					id="pidName" class="easyui-textbox" label="父菜单:"
-					disabled="disabled" style="width: 100%">
+				<input type="hidden" id="pid" name="pid" />
+				<input name="pidName"
+				id="pidName" class="easyui-textbox" label="父菜单:"
+				disabled="disabled" style="width: 100%">
 			</div>
 
 			<div style="margin-bottom: 10px">
 				<input name="name" class="easyui-textbox" required="true"
-					label="菜单名:" style="width: 100%">
+				label="菜单名:" style="width: 100%">
 			</div>
 			<div style="margin-bottom: 10px">
 				<input name="url" class="easyui-textbox" label="菜单地址:"
-					style="width: 100%">
+				style="width: 100%">
 			</div>
 			<div style="margin-bottom: 10px">
 				<input name="icon" class="easyui-textbox" label="图标:"
-					style="width: 100%">
+				style="width: 100%">
 			</div>
 			<div style="margin-bottom: 10px">
 				<input name="sort" class="easyui-numberbox" label="排序:"
-					style="width: 100%">
+				style="width: 100%">
 			</div>
 		</form>
 	</div>
 
 	<div id="dlg-buttons">
 		<a href="javascript:void(0)" class="easyui-linkbutton c6"
-			iconCls="icon-ok" onclick="saveSysMenu()" style="width: 90px">保存</a>
+		iconCls="icon-ok" onclick="saveSysMenu()" style="width: 90px">保存</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton"
-			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
-			style="width: 90px">取消</a>
+		iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+		style="width: 90px">取消</a>
 	</div>
 
 	<div id="tb">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
-			onclick="newSysMenu()">新增</a>
-	   <a href="#" class="easyui-linkbutton"
-			iconCls="icon-edit" plain="true" onclick="editSysMenu()">编辑</a>
-	    <a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
-			plain="true" onclick="deleteSysMenu()">删除</a>  
-	   <span id="searchBoxSpan" style="position:absolute; right:200px">
-		      菜单名: <input name="search_LIKE_name" class="easyui-textbox query" style="width:110px">
-		      
-
-	      <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="queryModel()" >Search</a>
-	   </span>
-	     
+		onclick="newSysMenu()">新增</a>
+		<a href="#" class="easyui-linkbutton"
+		iconCls="icon-edit" plain="true" onclick="editSysMenu()">编辑</a>
+		<a href="#" class="easyui-linkbutton  " iconCls="icon-remove"
+		plain="true" onclick="deleteSysMenu()">删除</a>
+		<span id="searchBoxSpan" style="margin-left:50px" class="left">
+			<input name="search_LIKE_name" class="query" style="width:150px" placeholder="菜单名">
+			<input id="menuPid" name="search_EQ_pid" class="query" style="width:150px" placeholder="父菜单"  onclick="showMenu();return false;">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-search" onfocus="showMenu()" >Search</a> </span>
+		 
 	</div>
-	 
 	</@layout>

@@ -1,5 +1,7 @@
 package per.zc.system.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +97,25 @@ public class SysMenuController  extends BaseController {
 			renderText(Constant.UPDATE_FAIL);
 		}
 		
+	}
+	
+	
+	/**
+	 * 全部菜单
+	 */
+	public void allMenu(){
+		List<SysMenu> sysMenus =  SysMenu.dao.findAll();
+		List<Map<String,Object>> maps = new ArrayList<>();
+		for(SysMenu sysMenu: sysMenus){
+			Map<String,Object> map = new HashMap<>();
+			map.put("id", sysMenu.getId());
+			map.put("pid", sysMenu.getPid());
+			map.put("name", sysMenu.getName());
+			map.put("icon", sysMenu.getIcon());
+			map.put("open", true);
+			maps.add(map);
+		}
+		renderJson(maps);
 	}
 
 }
