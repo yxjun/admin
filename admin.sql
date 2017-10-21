@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2017-10-21 01:04:29
+Date: 2017-10-21 10:05:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,7 +27,7 @@ CREATE TABLE `sys_menu` (
   `sort` int(11) DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -35,6 +35,7 @@ CREATE TABLE `sys_menu` (
 INSERT INTO `sys_menu` VALUES ('5', '系统管理', null, null, '0', null);
 INSERT INTO `sys_menu` VALUES ('6', '菜单管理', '/sysMenu', null, '0', '5');
 INSERT INTO `sys_menu` VALUES ('23', '角色管理', '/sysRole', null, '2', '5');
+INSERT INTO `sys_menu` VALUES ('58', '组织机构', '/sysOrg', null, '3', '5');
 
 -- ----------------------------
 -- Table structure for `sys_oplog`
@@ -98,7 +99,7 @@ CREATE TABLE `sys_role` (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('3', '管理员', '分配所有权限222', '2017-10-07 21:22:34', '0');
+INSERT INTO `sys_role` VALUES ('3', '管理员', '分配所有权限', '2017-10-07 21:22:34', '0');
 INSERT INTO `sys_role` VALUES ('12', '员工', 'staff', null, '2');
 INSERT INTO `sys_role` VALUES ('13', '主管', '主管', null, '3');
 INSERT INTO `sys_role` VALUES ('15', '1', '1', null, '4');
@@ -119,6 +120,7 @@ CREATE TABLE `sys_role_menu` (
 INSERT INTO `sys_role_menu` VALUES ('3', '5');
 INSERT INTO `sys_role_menu` VALUES ('3', '6');
 INSERT INTO `sys_role_menu` VALUES ('3', '23');
+INSERT INTO `sys_role_menu` VALUES ('3', '58');
 
 -- ----------------------------
 -- Table structure for `sys_user`

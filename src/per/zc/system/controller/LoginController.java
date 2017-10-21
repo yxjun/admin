@@ -100,7 +100,8 @@ public class LoginController  extends BaseController {
 	   
 	   String sql = "SELECT"
 	   		+ " su.*,"
-	   		+ " so.org_name AS orgName"
+	   		+ " so.org_name AS orgName, "
+	   		+ " so.id as orgId "
 	   		+ " FROM sys_user su"
 	   		+ " LEFT JOIN sys_org so ON su.org_id = so.id"
 	   		+ " where username = ? and password = ? and disabled = '0'";

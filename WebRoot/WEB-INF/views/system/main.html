@@ -5,9 +5,32 @@
 <script src="${ctx!}/res/ztree/js/jquery.ztree.exhide.min.js"></script>
 <style>
     .sideBar{
-       background-color: rgba(76, 175, 80, 0.5);;
+       background-color: #343536;
         color:white !important;
     }
+    .theme-header-layout{
+       background-color: #343536;
+    }
+    
+    .theme-navigate-user-button{
+     background-color: #343536 !important;
+    }
+    
+    
+    .theme-navigate-user-button:hover{
+     background-color: #444 !important;
+    }
+    
+    .node_name{
+      color:white !important;
+    }
+     .curSelectedNode:hover{
+       text-decoration: none !important;
+     }
+    .curSelectedNode>.node_name{
+      color:#f2711c !important;
+    }
+   
 </style>
 </head>
 <body>
@@ -104,7 +127,7 @@
         };
         $("#treeFiltrInput").on("keydown",function(e){
             if (e.keyCode == 13) {
-                alert('enter');
+                //alert('enter');
                 filter();
             }
 

@@ -1,6 +1,9 @@
 package per.zc.system.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.Db;
@@ -10,24 +13,45 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import per.zc.common.constant.Constant;
  
 import per.zc.system.model.SysOrg;
+import per.zc.system.model.SysUser;
 import per.zc.util.BaseController;
-import per.zc.util.TreeBuild;
+ 
 
 public class SysOrgController  extends BaseController{
 	
 	public  void index(){
-		 render( "system/sysOrg.html");  // 不可以斜杠开头，会认为 绝对路径
+		 render( "system/sysOrg.html");   
 	}
 	
-	public void query(){
+	public void orgQuery(){
 		List<SysOrg> sysOrgs = SysOrg.dao.find("select * from sys_org order by sort");
-		List<SysOrg> sysOrgTreeGrid = TreeBuild.easyuiOrgTreegridBuild(sysOrgs);
-		renderJson(sysOrgTreeGrid);
+		 
+		SysUser loginUser = getSessionAttr(Constant.SYSTEM_USER);
+		Integer orgId = loginUser.getOrgId();
+		
+		List<Map<String, Object>> maps = new ArrayList<>();
+		for(SysOrg sysOrg : sysOrgs){
+			Map<String, Object> map = new HashMap<>();
+			map.put("id", sysOrg.getId());
+			map.put("pid", sysOrg.getPid());
+			
+			map.put("open", true);   // ztree
+			map.put("state", "open"); // easyui tree
+			
+			map.put("name", sysOrg.getOrgName());  
+			
+		    if (orgId == sysOrg.getId()) {
+		    	map.put("checked", true); // easyui tree
+			}
+			
+		    maps.add(map);
+		}
+		renderJson(maps);
 		
 	}
 	
 	
-	public void add(){
+	public void orgAdd(){
 		SysOrg sysOrg = getBean(SysOrg.class,"");
 		boolean saveFlag = sysOrg.save();
 		if(saveFlag) {
@@ -38,7 +62,7 @@ public class SysOrgController  extends BaseController{
 	}
 	
 	
-	public void  update(){
+	public void  orgUpdate(){
 		
 		SysOrg sysOrg = getBean(SysOrg.class,"");
 		boolean updateFlag = sysOrg.update();
@@ -57,7 +81,7 @@ public class SysOrgController  extends BaseController{
 	 * 2： 当前机构和子组织机构的 人员 orgId 设置为null
 	 */
 	@Before(Tx.class)
-	public void delete(){
+	public void orgDelete(){
 		
 		Integer id =getParaToInt("id");
 		

@@ -103,6 +103,40 @@ function menuTree(treeObj, treeData, sck, cbk) {
 }
 
 /**
+ * 组织树
+ * @param treeObj
+ * @param treeData
+ * @param sck
+ * @param sl 是否显示线
+ * @param si 是否显示图标
+ * @param cbk 回调函数
+ * @returns
+ */
+function orgTree(treeObj, treeData, sck,sl,si, cbk) {
+	var setting = {
+			view:{
+				showLine:sl==null?false:sl,
+				showIcon:si==null?false:si,
+			},
+			check : {
+				enable : sck
+			},
+			data : {
+				simpleData : {
+					enable : true,
+					idKey : 'id',
+					pIdKey : 'pid',
+					rootPId : null
+				}
+			},
+			callback : cbk
+		};
+
+		var tree = $.fn.zTree.init((treeObj), setting, treeData);
+		return tree;
+}
+
+/**
  * easyui tree 树形数据处理
  */
 var EasyTree = function() {
